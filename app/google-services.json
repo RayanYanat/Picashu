@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "218618501534",
+    "project_id": "picashu-20d74",
+    "storage_bucket": "picashu-20d74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218618501534:android:947b5f92aa0105d2709e8f",
+        "android_client_info": {
+          "package_name": "com.example.picashu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218618501534-i4doh3e7e19g58b11258fe997q5g81ld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF0dvi_eBWbwpopxG941rgmaYF_oW70gU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218618501534-i4doh3e7e19g58b11258fe997q5g81ld.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

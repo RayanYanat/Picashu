@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+
+        <item
+            android:id="@+id/mon_profile"
+            android:title="mon profile">
+        </item>
+        <item
+            android:id="@+id/mes_achats"
+            android:title="mes achats"/>
+
+
+                <item
+                    android:id="@+id/mes_ventes"
+                    android:title="mes ventes" />
+
+                <item
+                    android:id="@+id/methode_paiement"
+                    android:title="methode paiement" />
+
+                <item
+                    android:id="@+id/collection"
+                    android:title="collection" />
+
+                <item
+                    android:id="@+id/chat"
+                    android:title="chat" />
+
+
+        <item
+            android:id="@+id/log_out"
+            android:title="Logout">
+        </item>
+
+    </group>
+
+</menu>
