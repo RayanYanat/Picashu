@@ -21,7 +21,7 @@ class FirebaseViewModel: ViewModel() {
         firebaseRepository.getUser(uid).addOnSuccessListener {
             val userItem = it?.toObject(User::class.java)
             currentUser.value = userItem
-            curreentUserr.value = userItem
+            curreentUserr.value = userItem!!
         }
         return curreentUserr
     }

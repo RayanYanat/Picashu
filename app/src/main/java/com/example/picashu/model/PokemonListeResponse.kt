@@ -24,4 +24,10 @@ data class ResultsItem(
 
 	@field:SerializedName("url")
 	val url: String? = null
+
+//			public int getNumber() {
+//		String[] urlPartes = url.split("/");
+//		return Integer.parseInt(urlPartes[urlPartes.length - 1]);
+	//}
+
 )
