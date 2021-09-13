@@ -6,23 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.picashu.R
-import com.example.picashu.model.Pokemon
 import com.example.picashu.model.ResultsItem
 
-class PokemonListAdapter : RecyclerView.Adapter<PokemonListAdapter.PokeListViewHolder>() {
+class PokemonListAdapter(private val listUser: List<ResultsItem>, private val listener: ItemClickListener) : RecyclerView.Adapter<PokemonListAdapter.PokeListViewHolder>() {
 
     private var mData: ArrayList<ResultsItem> = ArrayList()
 
     fun setResults(data: ArrayList<ResultsItem>) {
         mData = data
-        Log.d("pokemonADAPTER", "POKELISTDATA:" + mData.size)
-        notifyDataSetChanged()
+        Log.d("pokemonADAPTER", "POKELISTDATA:${mData.size}")
     }
+
     fun getData(): ArrayList<ResultsItem> {
         return mData
     }
@@ -40,22 +37,16 @@ class PokemonListAdapter : RecyclerView.Adapter<PokemonListAdapter.PokeListViewH
     override fun onBindViewHolder(holder: PokemonListAdapter.PokeListViewHolder, position: Int) {
         val pokeItem = mData.get(position)
 
-        val url = pokeItem.url
-        Log.d("pokemonADAPTER", "urlParse:$url")
-        val pokeNumber = url?.split("/".toRegex())?.dropLast(1)?.last()
+        holder.bind(pokeItem,listener)
 
-        if (pokeItem.name != null){
-            holder.nameItem.text = pokeItem.name
-            Glide.with(holder.itemView).load("https://pokeres.bastionbot.org/images/pokemon/${pokeNumber}.png").into(holder.imageItem)
-        }
+
 
     }
 
     fun addPokemonToList( pokemonList : ArrayList<ResultsItem>){
         mData.addAll(pokemonList)
-        Log.d("pokemonADAPTER", "fullPOKElIST:" + mData.size)
+        Log.d("pokemonADAPTER", "fullPOKElIST:$pokemonList")
 
-        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -67,6 +58,27 @@ class PokemonListAdapter : RecyclerView.Adapter<PokemonListAdapter.PokeListViewH
 
         val imageItem = view.findViewById<ImageView>(R.id.image_pokemon)
         val nameItem = view.findViewById<TextView>(R.id.name_pokemon)
+
+        fun bind(result : ResultsItem, clickListener: ItemClickListener){
+
+            val url = result.url
+            Log.d("pokemonADAPTER", "urlParse:$url")
+
+            val pokeNumber = url?.split("/".toRegex())?.dropLast(1)?.last()
+
+            if (result.name != null){
+                nameItem.text = result.name
+                Glide.with(itemView).load("https://pokeres.bastionbot.org/images/pokemon/${pokeNumber}.png").into(imageItem)
+            }
+
+            itemView.setOnClickListener {
+                clickListener.onItemClickListener(result)
+            }
+        }
+    }
+
+    interface ItemClickListener {
+        fun onItemClickListener(poke: ResultsItem)
     }
 }
 

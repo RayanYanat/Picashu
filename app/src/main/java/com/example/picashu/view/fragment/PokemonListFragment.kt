@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,23 +13,32 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.picashu.R
 import com.example.picashu.databinding.PokemonListFragmentBinding
+import com.example.picashu.model.PokemonListeResponse
 import com.example.picashu.model.ResultsItem
 import com.example.picashu.view.PokemonListAdapter
 import com.example.picashu.viewModel.PokemonApiViewModel
 
-class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment) {
+class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
+    PokemonListAdapter.ItemClickListener {
 
     private lateinit var binding: PokemonListFragmentBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var mViewModel: PokemonApiViewModel
     private lateinit var adapter: PokemonListAdapter
 
-    private var readyToChargeList : Boolean = false
+    private var readyToChargeList: Boolean = false
     private var offset = 0
     private var limit = 20
 
+    var isLoading = false
+    var isLastPage = false
+    var isScrolling = false
 
-    private lateinit var listPokemonData: List<ResultsItem>
+    private val POKE_NAME = "POKE_NAME"
+
+    val QUERY_PAGE_SIZE = 20
+
+    private var listPokemonData = ArrayList<ResultsItem>()
     private var listToAddToAdapter = ArrayList<ResultsItem>()
 
     override fun onCreateView(
@@ -36,58 +46,84 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding  = PokemonListFragmentBinding.inflate(inflater, container, false)
+        binding = PokemonListFragmentBinding.inflate(inflater, container, false)
         val view = binding.root
         mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
         recyclerView = binding.recyclerViewDataStat
-        mViewModel.getPokemonIds(20,offset)
-        pokemonListApiCall()
+        mViewModel.getPokemonIds(20, offset)
+        pokemonListApiCall2()
         configureRecyclerView()
 
         return view
     }
 
     private fun configureRecyclerView() {
-        this.listPokemonData = ArrayList()
-        adapter= PokemonListAdapter()
+
+        adapter = PokemonListAdapter(listPokemonData, this)
         val layoutManager = GridLayoutManager(activity, 3)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
+        adapter.setResults(listPokemonData)
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+            override fun onScrolled(recyclerView1: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0) {
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                    val visibleItemCount: Int = layoutManager.childCount
-                    val totalItemCount: Int = layoutManager.itemCount
-                    val pastVisibleItems: Int = layoutManager.findFirstVisibleItemPosition()
+                if (isScrolling && visibleItemCount + firstVisibleItemPosition == totalItemCount) {
+                    isScrolling = false
 
-                    //charge data if screen is scrolled
-                    if (readyToChargeList) {
-                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            readyToChargeList = false
-                            offset += 20
-                            mViewModel.getPokemonIds(limit,offset)
-                            pokemonListApiCall()
-
-                        }
-                    }
+                    offset += 20
+                    Log.d("pokemonApiCall", "offset: $offset) ")
+                    mViewModel.getPokemonIds(20, offset)
+                    pokemonListApiCall2()
                 }
 
-            }
-        })
 
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true
+                }
+            }
+
+        })
 
 
     }
 
     //retrieve pokemonList from apiCall
-    fun pokemonListApiCall (){
-        mViewModel.response.observe(viewLifecycleOwner, Observer {
-            readyToChargeList = true
-            listPokemonData = it.results as List<ResultsItem>
-            updateUI(listPokemonData as ArrayList<ResultsItem>)
+    fun pokemonListApiCall() {
+//        mViewModel.response.observe(viewLifecycleOwner, Observer {
+//            listPokemonData.addAll(it.results as ArrayList<ResultsItem>)
+        Log.d("pokemonApiCall", "POKELISTapi: pokemonListApiCall ")
+//            adapter.setResults(listPokemonData)
+//            adapter.notifyDataSetChanged()
+//            //updateUI(listPokemonData)
+        //     })
+    }
+
+    private fun pokemonListApiCall2() {
+
+        mViewModel.response.observe(viewLifecycleOwner, Observer { it: PokemonListeResponse ->
+//            listPokemonData.addAll(it.results as ArrayList<ResultsItem>)
+//            Log.d("pokemonApiCall", "POKELISTapi2: ${it.results.size}) ")
+
+//            //updateUI(listPokemonData)
+            val result = it.results
+            result?.forEach {
+                if (!listPokemonData.contains(it)) {
+                    listPokemonData.add(it!!)
+                }
+            }
+
+            adapter.notifyDataSetChanged()
         })
     }
 
@@ -95,19 +131,27 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment) {
     private fun updateUI(results: ArrayList<ResultsItem>) {
 
         Log.d("updateUI", "updateData:" + results.size)
-        adapter.addPokemonToList(results)
-        adapter.setResults(results)
+        // adapter.addPokemonToList(results)
+        // adapter.setResults(results)
         adapter.notifyDataSetChanged()
 
     }
 
-//    suspend fun pokeApiCall(){
-//
-//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = PokemonListFragmentBinding.bind(view)
+    }
+
+    override fun onItemClickListener(poke: ResultsItem) {
+        Log.d("pokemonADAPTER", "item clicked !! ")
+        val bundle = Bundle()
+        val pokemonCardListFragment = PokemonCardListFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        bundle.putString(POKE_NAME, poke.name)
+        pokemonCardListFragment.arguments = bundle
+        transaction.replace(R.id.main_fragment, pokemonCardListFragment).commit()
+
     }
 }
 

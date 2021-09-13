@@ -14,7 +14,7 @@ data class PokemonListeResponse(
 	val count: Int? = null,
 
 	@field:SerializedName("results")
-	val results: List<ResultsItem?>? = null
+	val results: MutableList<ResultsItem?>? = null
 )
 
 data class ResultsItem(

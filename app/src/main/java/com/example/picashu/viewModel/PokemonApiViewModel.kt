@@ -1,12 +1,10 @@
 package com.example.picashu.viewModel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.picashu.PokemonApiService
 import com.example.picashu.model.PokemonListeResponse
+import com.example.picashu.model.Response
 import com.example.picashu.repository.PokemonApiRepository
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -17,16 +15,24 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
 
     private var pokemonApiRepository = PokemonApiRepository(app)
 
-    val response : LiveData<PokemonListeResponse>
+    val response : MutableLiveData<PokemonListeResponse>
+    val cardResponse : MutableLiveData<Response>
 
     init {
         response = pokemonApiRepository.response
+        cardResponse = pokemonApiRepository.cardResponse
     }
 
      fun getPokemonIds( limit : Int, offset : Int) {
          viewModelScope.launch {
              pokemonApiRepository.getPokemonID(limit, offset)
          }
+    }
+
+    fun getPokemonCards (name : String, apiKey : String){
+        viewModelScope.launch {
+            pokemonApiRepository.getPokemonCard(name, apiKey)
+        }
     }
 
 }
