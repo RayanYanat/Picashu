@@ -25,6 +25,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),pokemonCar
     private lateinit var recyclerView: RecyclerView
     private lateinit var mViewModel: PokemonApiViewModel
     private lateinit var adapter: pokemonCardAdapter
+    private val POKE_ID = "POKE_ID"
 
     private var listPokemonCardData = ArrayList<DataItem>()
 
@@ -68,7 +69,13 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),pokemonCar
     }
 
     override fun onItemClickListener(poke: DataItem) {
-        TODO("Not yet implemented")
+
+        val bundle = Bundle()
+        val pokemonCardDetailFragment = PokemonCardDetailFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        bundle.putString(POKE_ID, poke.id)
+        pokemonCardDetailFragment.arguments = bundle
+        transaction.replace(R.id.main_fragment, pokemonCardDetailFragment).commit()
     }
 
 }

@@ -141,10 +141,22 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = PokemonListFragmentBinding.bind(view)
+        val searchButton = binding.summonerSearch
+        val searchEdit = binding.pokemonName
+
+        searchButton.setOnClickListener {
+            val pokemonName = searchEdit.text.toString()
+            val bundle = Bundle()
+            val pokemonCardListFragment = PokemonCardListFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            bundle.putString(POKE_NAME,pokemonName)
+            pokemonCardListFragment.arguments = bundle
+            transaction.replace(R.id.main_fragment, pokemonCardListFragment).commit()
+        }
     }
 
     override fun onItemClickListener(poke: ResultsItem) {
-        Log.d("pokemonADAPTER", "item clicked !! ")
+
         val bundle = Bundle()
         val pokemonCardListFragment = PokemonCardListFragment()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()

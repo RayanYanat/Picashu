@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.picashu.R
 import com.example.picashu.databinding.ActivityHomeBinding
+import com.example.picashu.view.fragment.PokemonCollectionFragment
 import com.example.picashu.view.fragment.PokemonListFragment
 import com.example.picashu.viewModel.FirebaseViewModel
 import com.google.android.gms.tasks.OnSuccessListener
@@ -123,6 +124,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+        val pokemonCollectionFragment = PokemonCollectionFragment()
+
         when (item.itemId) {
 
             R.id.log_out -> {
@@ -130,6 +134,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(this, RegisterActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+            }
+
+            R.id.collection -> {
+                supportFragmentManager.beginTransaction().replace(
+                    R.id.main_fragment,
+                    pokemonCollectionFragment
+                ).commit()
+
             }
         }
         return true

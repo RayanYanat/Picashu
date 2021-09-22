@@ -1,5 +1,8 @@
 package com.example.picashu
 
+import com.example.picashu.model.CardResponse.ResponseCard
+import com.example.picashu.model.CardSetResponse.CardSet
+import com.example.picashu.model.DataItem
 import com.example.picashu.model.PokemonListeResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -21,4 +24,15 @@ interface PokemonApiService {
 
     ): Response<com.example.picashu.model.Response>
 
+    @GET("cards/{id}")
+    suspend fun fetchPokemonCard(
+        @Path("id") id : String,
+    ): Response<ResponseCard>
+
+    @GET("sets")
+    suspend fun fetchPokemonSetsList(
+        @Query("q") q: String,
+        @Query("api_key") key: String
+
+    ): Response<CardSet>
 }
