@@ -68,7 +68,8 @@ class PokemonListAdapter(private val listUser: List<ResultsItem>, private val li
 
             if (result.name != null){
                 nameItem.text = result.name
-                Glide.with(itemView).load("https://pokeres.bastionbot.org/images/pokemon/${pokeNumber}.png").into(imageItem)
+
+                Glide.with(itemView).load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeNumber}.png").into(imageItem)
             }
 
             itemView.setOnClickListener {

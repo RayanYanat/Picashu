@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Picashu</string>
+    
+    <string-array name="Etats">
+        <item>Neuf</item>
+        <item>Parfait</item>
+        <item>Trés bon</item>
+        <item>Bon</item>
+        <item>Mauvais</item>
+    </string-array>
+
+    <string-array name="Langues">
+        <item>FR</item>
+        <item>ANG</item>
+        <item>JAP</item>
+        <item>KR</item>
+    </string-array>
+
+    <string-array name="Version">
+        <item>Holo</item>
+        <item>Reverse</item>
+        <item>Non holo</item>
+    </string-array>
+
 </resources>

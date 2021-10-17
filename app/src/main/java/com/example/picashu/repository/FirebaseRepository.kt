@@ -1,10 +1,12 @@
 package com.example.picashu.repository
 
+import com.example.picashu.model.Card
 import com.example.picashu.model.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
@@ -40,5 +42,16 @@ class FirebaseRepository {
     }
 
 
+    fun CreateCard (card :Card, uid:String): Task<Void> {
+        return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").document(card.id).set(card)
+    }
+
+    fun DeleteCard(card :Card, uid:String) : Task<Void> {
+        return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").document(card.id).delete()
+    }
+
+    fun getUserCardCollection(uid:String): CollectionReference{
+        return  FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection")
+    }
 
 }

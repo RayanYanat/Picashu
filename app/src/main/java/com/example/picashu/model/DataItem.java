@@ -83,6 +83,38 @@ public class DataItem{
 	@SerializedName("resistances")
 	private List<ResistancesItem> resistances;
 
+	private Boolean addBtnVisible;
+
+	private Boolean deleteBtnVisible;
+
+	private Boolean tradeBtnVisible;
+
+	public Boolean getTradeBtnVisible() {
+		return tradeBtnVisible;
+	}
+
+	public void setTradeBtnVisible(Boolean tradeBtnVisible) {
+		this.tradeBtnVisible = tradeBtnVisible;
+	}
+
+	public Boolean getAddBtnVisible() {
+		return addBtnVisible;
+	}
+
+	public void setAddBtnVisible(Boolean addBtnVisible) {
+		this.addBtnVisible = addBtnVisible;
+	}
+
+	public Boolean getDeleteBtnVisible() {
+		return deleteBtnVisible;
+	}
+
+	public void setDeleteBtnVisible(Boolean deleteBtnVisible) {
+		this.deleteBtnVisible = deleteBtnVisible;
+	}
+
+
+
 	public String getSupertype(){
 		return supertype;
 	}

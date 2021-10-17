@@ -1,5 +1,6 @@
 package com.example.picashu.view
 
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +11,28 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.picashu.R
+import com.example.picashu.model.Card
 import com.example.picashu.model.CardSetResponse.DataItem
 import com.example.picashu.model.ResultsItem
+import com.example.picashu.view.fragment.PokemonCardListFragment
 
 
-class PokemonSetAdapter(private val listUser: List<DataItem>, private val listener: PokemonSetAdapter.ItemClickListener) : RecyclerView.Adapter<PokemonSetAdapter.PokeSetListViewHolder>(),PokemonSetChilAdapter.ItemClickListener {
+class PokemonSetAdapter(private val listDataSet: ArrayList<DataItem>, private val listener: PokemonSetChilAdapter.ItemClickListener,private val listSeries : List<String>,private val listUserCard : List<Card>) : RecyclerView.Adapter<PokemonSetAdapter.PokeSetListViewHolder>(){
 
-    private var mData: ArrayList<DataItem> = ArrayList()
+    private var mData: ArrayList<String> = ArrayList()
+    private var listPokemonSeries = ArrayList<String>()
+    private var mResult : List<Card> = ArrayList()
 
-    fun setResults(data: ArrayList<DataItem>) {
+
+
+    fun setResults(data: ArrayList<String>) {
         mData = data
         Log.d("PokemonSetAdapter", "POKELISTDATA:${mData.size}")
+    }
+
+    fun setCardResults ( result : List<Card> ){
+        mResult = result
+        Log.d("pokemonADAPTER", "POKELISTCardDATA:$listUserCard")
     }
 
 
@@ -34,17 +46,13 @@ class PokemonSetAdapter(private val listUser: List<DataItem>, private val listen
     }
 
     override fun onBindViewHolder(
-        holder: PokemonSetAdapter.PokeSetListViewHolder,
+        holder: PokeSetListViewHolder,
         position: Int
     ) {
-        val pokeItem = mData.get(position)
-        val adapter = PokemonSetChilAdapter(mData,this)
-        adapter.setResults(mData)
 
-        holder.bind(pokeItem)
+        val serieItem = mData.get(position)
 
-        holder.childRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context, LinearLayoutManager.VERTICAL,false)
-        holder.childRecyclerView.adapter = adapter
+        holder.bind(listDataSet,serieItem,listener,listUserCard)
 
     }
 
@@ -57,24 +65,40 @@ class PokemonSetAdapter(private val listUser: List<DataItem>, private val listen
 
         val imageItem = view.findViewById<ImageView>(R.id.pokemon_set_pic)
         val nameItem = view.findViewById<TextView>(R.id.pokemon_set_name)
+        val ratioItem = view.findViewById<TextView>(R.id.pokemon_set_ratio)
         val childRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_child_set_data)
 
 
-        fun bind(result : DataItem){
+        fun bind(setResult : ArrayList<DataItem>, series :String, clickListener: PokemonSetChilAdapter.ItemClickListener, listUserCard : List<Card>){
 
+             val listPokemonSet: ArrayList<DataItem> = ArrayList()
+             var seriesTotalCard = 0
+            var seriesTotalCardOwned = 0
 
-
-            if (result.name != null){
-
-                nameItem.text = result.series
-                Glide.with(itemView).load(result.images?.logo).into(imageItem)
-
-
-
+            setResult.forEach {
+                if (it.series == series){
+                    listPokemonSet.add(it)
+                    seriesTotalCard += it.total!!
+                }
             }
 
-        }
+            listUserCard.forEach {
+                if (it.serie == series){
+                    seriesTotalCardOwned++
+                }
+            }
 
+            ratioItem.text = "$seriesTotalCardOwned/${seriesTotalCard}"
+            nameItem.text = series
+            val adapter = PokemonSetChilAdapter(listPokemonSet,clickListener,listUserCard)
+            adapter.setResults(listPokemonSet)
+            childRecyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+            childRecyclerView.adapter = adapter
+
+            itemView.setOnClickListener{
+
+            }
+        }
 
     }
 
@@ -82,9 +106,7 @@ class PokemonSetAdapter(private val listUser: List<DataItem>, private val listen
         fun onItemClickListener(poke: ResultsItem)
     }
 
-    override fun onItemClickListener(poke: ResultsItem) {
-        Log.d("pokemonADAPTER", "item clicked !! ")
-    }
+
 
 
 }

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/user_profilImg_trade"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_anon_user_48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username_trade_user" />
+
+    <TextView
+        android:id="@+id/username_trade_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username (avis)"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/trade_card_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="Etat :"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/username_trade_user"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/trade_card_state1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="BON"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/username_trade_user"
+        app:layout_constraintTop_toBottomOf="@id/trade_card_state" />
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/trade_card_langue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="langue :"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/trade_card_state"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+
+        android:id="@+id/trade_card_langue1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="FRANCAIS"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/trade_card_state1"
+        app:layout_constraintTop_toBottomOf="@id/trade_card_langue" />
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/trade_card_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="version :"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/trade_card_langue1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/trade_card_version1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="HOLO"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/trade_card_langue1"
+        app:layout_constraintTop_toBottomOf="@id/trade_card_version" />
+
+    <ImageButton
+        android:src="@drawable/ic_baseline_comment_24"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/comment_trade_btn"
+        app:layout_constraintStart_toEndOf="@id/trade_card_version1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trade_card_version"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

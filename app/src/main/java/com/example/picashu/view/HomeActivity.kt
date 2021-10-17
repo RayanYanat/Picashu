@@ -126,6 +126,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         val pokemonCollectionFragment = PokemonCollectionFragment()
+        val pokemonListFragment = PokemonListFragment()
 
         when (item.itemId) {
 
@@ -142,6 +143,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     pokemonCollectionFragment
                 ).commit()
 
+            }
+
+            R.id.mes_ventes -> {
+                supportFragmentManager.beginTransaction().replace(
+                    R.id.main_fragment,
+                    pokemonListFragment
+                ).commit()
             }
         }
         return true

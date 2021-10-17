@@ -10,10 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.picashu.R
+import com.example.picashu.model.Card
 import com.example.picashu.model.CardSetResponse.DataItem
 import com.example.picashu.model.ResultsItem
 
-class PokemonSetChilAdapter(private val listUser: List<DataItem>, private val listener: PokemonSetChilAdapter.ItemClickListener) : RecyclerView.Adapter<PokemonSetChilAdapter.PokeSetChildListViewHolder>() {
+class PokemonSetChilAdapter(private val listUser: List<DataItem>, private val listener: ItemClickListener, private val listUserCard : List<Card>) : RecyclerView.Adapter<PokemonSetChilAdapter.PokeSetChildListViewHolder>() {
 
     private var mData: ArrayList<DataItem> = ArrayList()
 
@@ -34,7 +35,7 @@ class PokemonSetChilAdapter(private val listUser: List<DataItem>, private val li
     override fun onBindViewHolder(holder: PokemonSetChilAdapter.PokeSetChildListViewHolder, position: Int) {
         val pokeItem = mData.get(position)
 
-        holder.bind(pokeItem)
+        holder.bind(pokeItem,listener,listUserCard)
     }
 
     override fun getItemCount(): Int {
@@ -48,13 +49,27 @@ class PokemonSetChilAdapter(private val listUser: List<DataItem>, private val li
         val ratioItem = view.findViewById<TextView>(R.id.pokemon_set_child_ratio)
 
         @SuppressLint("SetTextI18n")
-        fun bind(result : DataItem){
+        fun bind(result : DataItem, clickListener: ItemClickListener,listUserCard: List<Card>){
+
+            var setTotalCardOwned = 0
+
+            listUserCard.forEach {
+                if (it.set == result.name){
+                    setTotalCardOwned++
+                }
+            }
 
             if (result.name != null){
 
                 nameItem.text = result.name
                 Glide.with(itemView).load(result.images?.logo).into(imageItem)
-                ratioItem.text = "0/${result.total}"
+                ratioItem.text = "$setTotalCardOwned/${result.total}"
+            }
+
+
+
+            itemView.setOnClickListener {
+                clickListener.onItemClickListener(result)
             }
 
         }
@@ -63,7 +78,7 @@ class PokemonSetChilAdapter(private val listUser: List<DataItem>, private val li
     }
 
     interface ItemClickListener {
-        fun onItemClickListener(poke: ResultsItem)
+        fun onItemClickListener(poke: DataItem)
     }
 
 }
