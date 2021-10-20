@@ -1,6 +1,7 @@
 package com.example.picashu.repository
 
 import com.example.picashu.model.Card
+import com.example.picashu.model.TradeCard
 import com.example.picashu.model.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +42,17 @@ class FirebaseRepository {
         return Objects.requireNonNull(FirebaseAuth.getInstance().currentUser)!!.uid
     }
 
+    fun CreateTradeCardOffer (tradeCard : TradeCard, cardUid : String, userUid : String) : Task<Void>{
+        return FirebaseFirestore.getInstance().collection("/tradeCardCollection/$cardUid/listTradeCrd").document(userUid).set(tradeCard)
+    }
+
+    fun DeleteTradeCardOffer (tradeCard : TradeCard, cardUid : String, userUid : String) : Task<Void>{
+        return FirebaseFirestore.getInstance().collection("/tradeCardCollection/$cardUid/listTradeCrd").document(userUid).delete()
+    }
+
+    fun getTradOfferCollection (cardUid : String):CollectionReference{
+        return  FirebaseFirestore.getInstance().collection("/tradeCardCollection/$cardUid/listTradeCrd")
+    }
 
     fun CreateCard (card :Card, uid:String): Task<Void> {
         return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").document(card.id).set(card)

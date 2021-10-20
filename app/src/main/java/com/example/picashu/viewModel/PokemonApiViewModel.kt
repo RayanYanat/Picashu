@@ -5,12 +5,9 @@ import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.picashu.PokemonApiService
-import com.example.picashu.model.Card
+import com.example.picashu.model.*
 import com.example.picashu.model.CardResponse.ResponseCard
 import com.example.picashu.model.CardSetResponse.CardSet
-import com.example.picashu.model.DataItem
-import com.example.picashu.model.PokemonListeResponse
-import com.example.picashu.model.Response
 import com.example.picashu.repository.FirebaseRepository
 import com.example.picashu.repository.PokemonApiRepository
 import com.google.firebase.firestore.EventListener
@@ -23,6 +20,7 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
 
     private var pokemonApiRepository = PokemonApiRepository(app)
     private var firebaseRepository = FirebaseRepository()
+    private var currentUser: MutableLiveData<User> = MutableLiveData()
 
     val response : MutableLiveData<PokemonListeResponse>
     val cardResponse : MutableLiveData<Response>
@@ -30,7 +28,10 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
     val setResponse : MutableLiveData<CardSet>
 
 
+
+
     var savedCard : MutableLiveData<List<Card>> = MutableLiveData()
+    var savedTradeCardOffer : MutableLiveData<List<TradeCard>> = MutableLiveData()
 
     init {
         response = pokemonApiRepository.response
@@ -71,6 +72,24 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
         firebaseRepository.DeleteCard(card,uid)
     }
 
+    fun CreateTradeCard (tradeCard: TradeCard, userUid : String,cardId :String){
+        firebaseRepository.CreateTradeCardOffer(tradeCard,cardId,userUid)
+    }
+
+    fun DeleteTradeCard (tradeCard: TradeCard, userUid : String,cardId :String){
+        firebaseRepository.DeleteTradeCardOffer(tradeCard,cardId,userUid)
+    }
+
+
+    fun getUser (uid: String) : LiveData<User> {
+        val curreentUserr = MutableLiveData<User>()
+        firebaseRepository.getUser(uid).addOnSuccessListener {
+            val userItem = it?.toObject(User::class.java)
+            currentUser.value = userItem
+            curreentUserr.value = userItem!!
+        }
+        return curreentUserr
+    }
 
     fun getSavedUserCards(uid: String): LiveData<List<Card>> {
         firebaseRepository.getUserCardCollection(uid).addSnapshotListener(EventListener { value, e ->
@@ -89,6 +108,25 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
         })
 
         return savedCard
+    }
+
+    fun getSavedCardTradeOffer(cardUid: String): LiveData<List<TradeCard>> {
+        firebaseRepository.getTradOfferCollection(cardUid).addSnapshotListener(EventListener { value, e ->
+            if (e != null) {
+                Log.w(ContentValues.TAG, "Listen failed.", e)
+                savedTradeCardOffer.value = null
+                return@EventListener
+            }
+
+            val savedUserList : MutableList<TradeCard> = mutableListOf()
+            for (doc in value!!) {
+                val userItem = doc.toObject(TradeCard::class.java)
+                savedUserList.add(userItem)
+            }
+            savedTradeCardOffer.value = savedUserList
+        })
+
+        return savedTradeCardOffer
     }
 
 }

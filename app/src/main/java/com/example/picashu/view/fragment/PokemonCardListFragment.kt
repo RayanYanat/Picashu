@@ -29,6 +29,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
 
     private val POKE_ID = "POKE_ID"
     private val POKE_SET ="POKE_SET"
+    private val POKE_IMG_URL ="POKE_IMG_URL"
 
     private var listPokemonCardData = ArrayList<DataItem>()
     private var listUserCardData = ArrayList<Card>()
@@ -152,7 +153,8 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
         val bundle = Bundle()
         val tradeCardFragment = TradeCardFragment()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        bundle.putString(POKE_ID, poke.images.small)
+        bundle.putString(POKE_ID, poke.id)
+        bundle.putString(POKE_IMG_URL,poke.images.small)
         tradeCardFragment.arguments = bundle
         transaction.replace(R.id.main_fragment, tradeCardFragment).commit()
         Toast.makeText(context,"${poke.name} from the set ${poke.set.name} was traded from your collection",Toast.LENGTH_SHORT).show()
