@@ -22,6 +22,7 @@ import com.example.picashu.R
 import com.example.picashu.databinding.ActivityHomeBinding
 import com.example.picashu.view.fragment.PokemonCollectionFragment
 import com.example.picashu.view.fragment.PokemonListFragment
+import com.example.picashu.view.fragment.lastestMsgChatFragment
 import com.example.picashu.viewModel.FirebaseViewModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.navigation.NavigationView
@@ -127,6 +128,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val pokemonCollectionFragment = PokemonCollectionFragment()
         val pokemonListFragment = PokemonListFragment()
+        val lastestMsgChatFragment = lastestMsgChatFragment()
 
         when (item.itemId) {
 
@@ -149,6 +151,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(
                     R.id.main_fragment,
                     pokemonListFragment
+                ).commit()
+            }
+
+            R.id.chat -> {
+                supportFragmentManager.beginTransaction().replace(
+                    R.id.main_fragment,
+                    lastestMsgChatFragment
                 ).commit()
             }
         }

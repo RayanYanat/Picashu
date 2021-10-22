@@ -21,6 +21,8 @@
             android:theme="@style/Theme.Picashu.NoActionBar"/>
         <activity android:name=".view.HomeActivity"
             android:theme="@style/Theme.Picashu.NoActionBar"/>
+        <activity android:name=".view.activity.ChatLogActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
     </application>
 
 </manifest>

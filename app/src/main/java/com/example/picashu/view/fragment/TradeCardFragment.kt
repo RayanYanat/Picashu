@@ -77,7 +77,7 @@ class TradeCardFragment : Fragment(R.layout.trade_card_fragment) {
             val versionCard = version_card.text.toString()
             val cardComment = trade_card_desc.text.toString()
 
-            val tradeCardToAdd = TradeCard(currentCardId,currentUsername,versionCard,stateOfCard,cardComment,cardLangue)
+            val tradeCardToAdd = TradeCard(currentCardId,currentUsername,versionCard,stateOfCard,cardComment,cardLangue,currentUserId)
 
             mViewModel.CreateTradeCard(tradeCardToAdd,currentUserId,currentCardId)
 

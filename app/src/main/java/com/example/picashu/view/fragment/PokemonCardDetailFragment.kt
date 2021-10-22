@@ -29,6 +29,8 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter : TradeCardAdapter
 
+    private val USER_ID = "USER_ID"
+
 
     private var listTradeOffer = ArrayList<TradeCard>()
 
@@ -80,8 +82,11 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
 
 
     override fun onItemClickListener(poke: TradeCard) {
+        val bundle = Bundle()
+        bundle.putString(USER_ID,poke.userId)
         val profilUserFragment = ProfilUserFragment()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        profilUserFragment.arguments = bundle
         transaction.replace(R.id.main_fragment, profilUserFragment).commit()
     }
 

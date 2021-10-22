@@ -119,6 +119,7 @@
     </TextView>
 
     <Button
+        android:id="@+id/send_msg_button"
         android:layout_marginEnd="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
