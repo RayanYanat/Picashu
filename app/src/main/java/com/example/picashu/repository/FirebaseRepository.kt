@@ -1,15 +1,13 @@
 package com.example.picashu.repository
 
+import com.example.picashu.model.Avis
 import com.example.picashu.model.Card
 import com.example.picashu.model.TradeCard
 import com.example.picashu.model.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import java.util.*
 
 class FirebaseRepository {
@@ -42,6 +40,14 @@ class FirebaseRepository {
         return Objects.requireNonNull(FirebaseAuth.getInstance().currentUser)!!.uid
     }
 
+    fun getCurrentTradedCardBySerie(uid:String, serie : String) : Task<QuerySnapshot?>{
+        return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").whereEqualTo("serie",serie).get()
+    }
+
+    fun getCurrentTradedCardBySet(uid:String, set : String) : Task<QuerySnapshot?>{
+        return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").whereEqualTo("set",set).get()
+    }
+
     fun CreateTradeCardOffer (tradeCard : TradeCard, cardUid : String, userUid : String) : Task<Void>{
         return FirebaseFirestore.getInstance().collection("/tradeCardCollection/$cardUid/listTradeCrd").document(userUid).set(tradeCard)
     }
@@ -58,12 +64,20 @@ class FirebaseRepository {
         return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").document(card.id).set(card)
     }
 
+    fun CreateAvis (avis : Avis, toId : String): Task<DocumentReference> {
+        return  FirebaseFirestore.getInstance().collection("/users/$toId/avis").add(avis)
+    }
+
     fun DeleteCard(card :Card, uid:String) : Task<Void> {
         return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").document(card.id).delete()
     }
 
     fun getUserCardCollection(uid:String): CollectionReference{
         return  FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection")
+    }
+
+    fun getUserAvisCollection(uid:String): CollectionReference{
+        return  FirebaseFirestore.getInstance().collection("/users/$uid/avis")
     }
 
 }

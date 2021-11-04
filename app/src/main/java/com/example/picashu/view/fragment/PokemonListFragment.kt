@@ -142,7 +142,7 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
         super.onViewCreated(view, savedInstanceState)
         binding = PokemonListFragmentBinding.bind(view)
         val searchButton = binding.summonerSearch
-        val searchEdit = binding.pokemonName
+        val searchEdit = binding.pokemonNameLayout
 
         searchButton.setOnClickListener {
             val pokemonName = searchEdit.text.toString()

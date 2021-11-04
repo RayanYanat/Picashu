@@ -17,6 +17,7 @@
         android:id="@+id/user_profilImg_trade"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:background="@drawable/rounded_select_photo_button"
         android:src="@drawable/ic_anon_user_48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/username_trade_user" />

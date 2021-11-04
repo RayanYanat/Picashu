@@ -29,9 +29,11 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
 
 
 
-
+    var savedAvis  : MutableLiveData<List<Avis>> = MutableLiveData()
     var savedCard : MutableLiveData<List<Card>> = MutableLiveData()
     var savedTradeCardOffer : MutableLiveData<List<TradeCard>> = MutableLiveData()
+    var savedTradeCardFromSet : MutableLiveData<Int> = MutableLiveData()
+    var savedTradeCardFromSeries : MutableLiveData<Int> = MutableLiveData()
 
     init {
         response = pokemonApiRepository.response
@@ -72,6 +74,19 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
         firebaseRepository.DeleteCard(card,uid)
     }
 
+    fun getCurrentTradedCardBySet(uid:String, set : String): MutableLiveData<Int> {
+        firebaseRepository.getCurrentTradedCardBySet(uid, set).addOnSuccessListener {
+            savedTradeCardFromSet.value =  it?.size()
+        }
+        return savedTradeCardFromSet
+    }
+
+    fun getCurrentTradedCardBySerie(uid:String, serie : String): MutableLiveData<Int> {
+        firebaseRepository.getCurrentTradedCardBySerie(uid, serie).addOnSuccessListener {
+           savedTradeCardFromSeries.value =  it?.size()
+        }
+        return savedTradeCardFromSeries
+    }
     fun CreateTradeCard (tradeCard: TradeCard, userUid : String,cardId :String){
         firebaseRepository.CreateTradeCardOffer(tradeCard,cardId,userUid)
     }
@@ -108,6 +123,24 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
         })
 
         return savedCard
+    }
+   fun getSavedUserAvis(uid: String): LiveData<List<Avis>> {
+        firebaseRepository.getUserAvisCollection(uid).addSnapshotListener(EventListener { value, e ->
+            if (e != null) {
+                Log.w(ContentValues.TAG, "Listen failed.", e)
+                savedAvis.value = null
+                return@EventListener
+            }
+
+            val savedUserList : MutableList<Avis> = mutableListOf()
+            for (doc in value!!) {
+                val userItem = doc.toObject(Avis::class.java)
+                savedUserList.add(userItem)
+            }
+            savedAvis.value = savedUserList
+        })
+
+        return savedAvis
     }
 
     fun getSavedCardTradeOffer(cardUid: String): LiveData<List<TradeCard>> {

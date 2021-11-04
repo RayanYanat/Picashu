@@ -8,6 +8,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.picashu.R
 import com.example.picashu.model.ResultsItem
 import com.example.picashu.model.TradeCard
@@ -49,14 +51,23 @@ class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val 
 
         fun Bind( result : TradeCard,clickListener: ItemClickListener){
 
+            Log.d("TradeCardAdapter", "userProfilImg :${result.profilImg}")
+
             tradeUsername.text = result.username
             stateOfCard.text = result.etatCard
             languageOfCard.text = result.cardLanguage
             verionCard.text = result.versionCard
 
+            if (result.profilImg != null){
+                Glide.with(itemView).load(result.profilImg).apply(RequestOptions.circleCropTransform()).into(userImage)
+            }
 
             itemView.setOnClickListener {
                 clickListener.onItemClickListener(result)
+            }
+
+            commentBtn.setOnClickListener {
+                clickListener.onCommentBtnClickListener(result)
             }
 
         }
@@ -64,5 +75,6 @@ class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val 
 
     interface ItemClickListener {
         fun onItemClickListener(poke: TradeCard)
+        fun onCommentBtnClickListener (poke : TradeCard)
     }
 }

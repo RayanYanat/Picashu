@@ -28,7 +28,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
     private lateinit var adapter: PokemonCardAdapter
 
     private val POKE_ID = "POKE_ID"
-    private val POKE_SET ="POKE_SET"
+    private val POKE_CARD ="POKE_CARD"
     private val POKE_IMG_URL ="POKE_IMG_URL"
 
     private var listPokemonCardData = ArrayList<DataItem>()
@@ -119,8 +119,10 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
     override fun onItemClickListener(poke: DataItem) {
 
         val bundle = Bundle()
+        val card = Card(poke.id,poke.set.name,poke.name,poke.images.small,poke.set.series)
         val pokemonCardDetailFragment = PokemonCardDetailFragment()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        bundle.putParcelable(POKE_CARD,card)
         bundle.putString(POKE_ID, poke.id)
         pokemonCardDetailFragment.arguments = bundle
         transaction.replace(R.id.main_fragment, pokemonCardDetailFragment).commit()

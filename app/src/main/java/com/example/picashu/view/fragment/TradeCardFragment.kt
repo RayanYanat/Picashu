@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.picashu.R
 import com.example.picashu.databinding.TradeCardFragmentBinding
+import com.example.picashu.model.Card
 import com.example.picashu.model.TradeCard
 import com.example.picashu.viewModel.PokemonApiViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ class TradeCardFragment : Fragment(R.layout.trade_card_fragment) {
     private lateinit var currentCardId : String
     private lateinit var currentCardImage : String
     private lateinit var currentUsername : String
+    private lateinit var currentUserImg : String
     private lateinit var ListAvisUser : String
 
 
@@ -66,7 +68,9 @@ class TradeCardFragment : Fragment(R.layout.trade_card_fragment) {
         mViewModel.getUser(currentUserId).observe(viewLifecycleOwner,{
             if(it != null){
                 currentUsername = it.username
+                currentUserImg = it.profileImageUrl
             }
+
         })
 
         val tradeBtn = binding.tradeBtn
@@ -77,7 +81,7 @@ class TradeCardFragment : Fragment(R.layout.trade_card_fragment) {
             val versionCard = version_card.text.toString()
             val cardComment = trade_card_desc.text.toString()
 
-            val tradeCardToAdd = TradeCard(currentCardId,currentUsername,versionCard,stateOfCard,cardComment,cardLangue,currentUserId)
+            val tradeCardToAdd = TradeCard(currentCardId,currentUsername,versionCard,stateOfCard,cardComment,cardLangue,currentUserId,currentUserImg)
 
             mViewModel.CreateTradeCard(tradeCardToAdd,currentUserId,currentCardId)
 

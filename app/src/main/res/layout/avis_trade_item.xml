@@ -15,10 +15,11 @@
 
         <ImageView
             android:id="@+id/user_profilImg_trade"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:src="@drawable/ic_anon_user_48dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -27,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="username"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/avisNb_trade_user"
             app:layout_constraintStart_toEndOf="@+id/user_profilImg_trade"
             app:layout_constraintTop_toTopOf="parent" />
@@ -36,9 +37,9 @@
             android:id="@+id/avisNb_trade_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="avis"
+            android:text="83 échanges"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/user_profilImg_trade"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,21 +50,23 @@
             android:layout_height="wrap_content"
             android:text="02/20/151"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/user_profilImg_trade"
             app:layout_constraintTop_toBottomOf="@+id/avisNb_trade_user" />
 
         <TextView
             android:id="@+id/comment_trade_user"
-            android:layout_marginStart="10dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="zzzzzzzzzzzzzzz"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/username_trade_user" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/avisNb_trade_user"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

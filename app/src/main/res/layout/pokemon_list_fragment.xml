@@ -5,36 +5,28 @@
     android:background="@color/purple_500"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.textfield.TextInputLayout
+
+
+    <EditText
         android:id="@+id/pokemon_name_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginStart="15dp"
-        android:background="@color/purple_200"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/pokemon_name"
-            android:layout_width="match_parent"
-            android:background="@color/purple_200"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="search a pokemon">
-
-        </com.google.android.material.textfield.TextInputEditText>
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:background="@drawable/rounded_edittext_search_pokemon"
+        android:ems="10"
+        android:hint="search a pokemon"
+        android:inputType="textPersonName"
+        android:paddingLeft="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/summoner_search"
         android:layout_width="50dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:background="@color/purple_200"
         app:icon = "@drawable/ic_baseline_search_24"
         app:layout_constraintBottom_toBottomOf="@id/pokemon_name_layout"

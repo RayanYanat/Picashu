@@ -17,11 +17,15 @@ import com.example.picashu.databinding.ActivityRegisterBinding
 import com.example.picashu.model.User
 import com.example.picashu.viewModel.FirebaseViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var  binding: ActivityRegisterBinding
     var selectedProfilImgUri : Uri? = null
+    var profilImgUrl : String? = null
     lateinit var mViewModel: FirebaseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,18 +71,48 @@ class RegisterActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password).addOnCompleteListener {
             if(!it.isSuccessful) return@addOnCompleteListener
             else{
-                mViewModel.createUserToFirebase(username,it.result?.user!!.uid,selectedProfilImgUri.toString(),email)
 
+                uploadImageToFirebaseStorage()
                 Toast.makeText(this, "Succeed to create user: $uid", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
 
             }
         }.addOnFailureListener {
             Log.d("RegisterActivity","failed to create a user: ${it.message}")
             Toast.makeText(this, "Failed to create user: ${it.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun uploadImageToFirebaseStorage() {
+        if (selectedProfilImgUri == null) return
+
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+
+        ref.putFile(selectedProfilImgUri!!)
+            .addOnSuccessListener {
+                Log.d(TAG, "Successfully uploaded image: ${it.metadata?.path}")
+
+                ref.downloadUrl.addOnSuccessListener { it1 ->
+                    Log.d(TAG, "File Location: $it1")
+
+                    saveUserToFirebaseDatabase(it1.toString())
+                }
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Failed to upload image to storage: ${it.message}")
+            }
+    }
+
+    private fun saveUserToFirebaseDatabase(profileImageUrl: String) {
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val email = binding.emailEdittextRegister.text.toString()
+        val username = binding.usernameEdittextRegister.text.toString()
+
+        mViewModel.createUserToFirebase(username,uid,profileImageUrl.toString(),email)
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+
     }
 
     private fun retrievSelectedImg(){

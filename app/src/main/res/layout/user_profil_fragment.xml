@@ -28,12 +28,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
 
                 android:id="@+id/user_profilImg_trade"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginTop="8dp"
+                app:civ_border_width="4dp"
                 android:src="@drawable/ic_anon_user_48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -110,7 +111,7 @@
         android:layout_marginStart="5dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="cette utilisateur échange aussi 54 \n carte de la serie ***** et 22 cartes\n du set *****"
+        android:text="cette utilisateur échange aussi 54 carte de la serie ***** et 22 cartes\n du set *****"
         app:layout_constraintBottom_toBottomOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/guideline8"
@@ -128,7 +129,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-
+        android:id="@+id/avis_recycler_view"
         android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

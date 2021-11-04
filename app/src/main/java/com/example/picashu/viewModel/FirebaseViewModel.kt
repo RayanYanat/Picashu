@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.picashu.model.Avis
 import com.example.picashu.model.User
 import com.example.picashu.repository.FirebaseRepository
 import com.google.firebase.firestore.EventListener
@@ -34,6 +35,9 @@ class FirebaseViewModel: ViewModel() {
         }
     }
 
+    fun createAvis (avis: Avis, toId : String){
+        firebaseRepository.CreateAvis(avis,toId)
+    }
 
     fun getSavedUsers(): LiveData<List<User>> {
         firebaseRepository.getUsersCollection().addSnapshotListener(EventListener { value, e ->

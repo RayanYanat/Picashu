@@ -118,13 +118,22 @@ class ChatLogActivity: AppCompatActivity() {
         msgReference.add(chatMessage)
 
         val latestMessageRef =
-            FirebaseFirestore.getInstance().collection("/latest-messages/$fromId/$toId")
-        latestMessageRef.document("lastestMsg").set(chatMessage)
+            FirebaseFirestore.getInstance().collection("/latest-messages/$fromId/contact")
+        latestMessageRef.document(toId).set(chatMessage)
 
 
         val latestMessageToRef =
-            FirebaseFirestore.getInstance().collection("/latest-messages/$toId/$fromId")
-        latestMessageToRef.document("lastestMsg").set(chatMessage)
+            FirebaseFirestore.getInstance().collection("/latest-messages/$toId/contact")
+        latestMessageToRef.document(fromId).set(chatMessage)
+
+//        val latestMessageRef =
+//            FirebaseFirestore.getInstance().collection("/latest-messages/$fromId/$toId")
+//        latestMessageRef.document("lastestMsg").set(chatMessage)
+//
+//
+//        val latestMessageToRef =
+//            FirebaseFirestore.getInstance().collection("/latest-messages/$toId/$fromId")
+//        latestMessageToRef.document("lastestMsg").set(chatMessage)
 
     }
 
