@@ -2,6 +2,8 @@
 package com.example.picashu.view.fragment
 
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,11 +19,13 @@ import com.bumptech.glide.Glide
 import com.example.picashu.R
 import com.example.picashu.databinding.DetailCardFragmentBinding
 import com.example.picashu.model.Card
+import com.example.picashu.model.CardResponse.ResponseCard
 import com.example.picashu.model.DataItem
 import com.example.picashu.model.ResultsItem
 import com.example.picashu.model.TradeCard
 import com.example.picashu.view.TradeCardAdapter
 import com.example.picashu.viewModel.PokemonApiViewModel
+import kotlinx.android.synthetic.main.detail_card_fragment.*
 
 class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
     TradeCardAdapter.ItemClickListener {
@@ -32,6 +36,7 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter : TradeCardAdapter
     private lateinit var currentCard : Card
+    private lateinit var currentCardApiResponse : ResponseCard
 
     private lateinit var commentPopUp : Dialog
 
@@ -64,6 +69,7 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
         Glide.with(this).load(currentCard.image).into(mainImageView)
 
         retrieveListCardTrade()
+        retrieveSelectedCardData()
         configureRecyclerView()
         return binding.root
     }
@@ -76,6 +82,22 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
         adapter.setResults(listTradeOffer)
     }
 
+    private fun retrieveSelectedCardData(){
+        mViewModel.cardIdResponse.observe(viewLifecycleOwner,{
+            currentCardApiResponse = it
+
+            average_price_cm.text =
+                " Average Price : ${currentCardApiResponse.data?.cardmarket?.prices?.averageSellPrice}€"
+            lowest_price_cm.text =
+                "Lowest Price : ${currentCardApiResponse.data?.cardmarket?.prices?.lowPrice}€"
+
+            average_price_tgc.text =
+                " Average Price : / "
+            lowest_price_tgc.text =
+                " Lowest Price : / "
+
+        })
+    }
     private fun retrieveListCardTrade(){
       mViewModel.savedTradeCardOffer.observe(viewLifecycleOwner,{
           listTradeOffer.addAll(it)
@@ -93,7 +115,41 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
+
+
+            lien_cardmarket.setOnClickListener {
+
+                val data = currentCardApiResponse.data?.cardmarket?.url
+                if (data != null) {
+                    val defaultBrowser =
+                        Intent.makeMainSelectorActivity(
+                            Intent.ACTION_MAIN,
+                            Intent.CATEGORY_APP_BROWSER
+                        )
+                    defaultBrowser.data = Uri.parse(data)
+                    startActivity(defaultBrowser)
+                }
+
+            }
+
+
+
+            lien_tgcplayer.setOnClickListener {
+
+                val data = currentCardApiResponse.data?.tcgplayer?.url
+                if (data != null) {
+                    val defaultBrowser =
+                        Intent.makeMainSelectorActivity(
+                            Intent.ACTION_MAIN,
+                            Intent.CATEGORY_APP_BROWSER
+                        )
+                    defaultBrowser.data = Uri.parse(data)
+                    startActivity(defaultBrowser)
+                }
+
+            }
+        }
+
 
 
 

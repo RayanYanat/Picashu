@@ -126,7 +126,6 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
         bundle.putString(POKE_ID, poke.id)
         pokemonCardDetailFragment.arguments = bundle
         transaction.replace(R.id.main_fragment, pokemonCardDetailFragment).commit()
-        Log.d("currentcardURLprices", "prices : ${poke.cardmarket.prices.averageSellPrice}, ${poke.cardmarket.prices.lowPrice} tgcprice : ${poke.tcgplayer.prices.lowPrice}, ${poke.tcgplayer.prices.averageSellPrice}")
         Log.d("currentBtnState", "currentBtnState: add = ${poke.addBtnVisible}; delete = ${poke.deleteBtnVisible}; trad = ${poke.tradeBtnVisible}")
     }
 

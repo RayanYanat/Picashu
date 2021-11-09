@@ -48,8 +48,9 @@ class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val 
         val languageOfCard  = view.findViewById<TextView>(R.id.trade_card_langue1)
         val verionCard  = view.findViewById<TextView>(R.id.trade_card_version1)
         val commentBtn = view.findViewById<ImageButton>(R.id.comment_trade_btn)
+        val nbAvisUser = view.findViewById<TextView>(R.id.nb_user_avis)
 
-        fun Bind( result : TradeCard,clickListener: ItemClickListener){
+        fun Bind( result : TradeCard ,clickListener: ItemClickListener){
 
             Log.d("TradeCardAdapter", "userProfilImg :${result.profilImg}")
 
