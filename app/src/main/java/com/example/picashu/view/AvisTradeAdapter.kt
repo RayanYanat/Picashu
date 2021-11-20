@@ -13,6 +13,7 @@ import com.example.picashu.R
 import com.example.picashu.model.Avis
 import com.example.picashu.model.DataItem
 import com.example.picashu.model.TradeCard
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AvisTradeAdapter (): RecyclerView.Adapter<AvisTradeViewHolder>() {
 
@@ -57,12 +58,27 @@ class AvisTradeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val tradeDate = view.findViewById<TextView>(R.id.date_trade_user)
     val commentTrade = view.findViewById<TextView>(R.id.comment_trade_user)
 
+
     fun Bind( result : Avis){
+
+        val ref = FirebaseFirestore.getInstance()
+            .collection("/users/${result.fromId}/avis")
+
+
+        ref.addSnapshotListener { snapshots, e ->
+
+            if (e != null) {
+                Log.w("TAG", "listen:error", e)
+                return@addSnapshotListener
+            }
+            nbTrade.text = "${snapshots?.size()} Avis"
+
+
+        }
 
         Glide.with(itemView).load(result.fromImgUser).apply(RequestOptions.circleCropTransform()).into(userImage)
         tradeUsername.text = result.fromUsername
-        nbTrade.text = "83 échanges"
-        tradeDate.text = "21/01/12"
+        tradeDate.text = result.date
         commentTrade.text = result.avis
 
     }

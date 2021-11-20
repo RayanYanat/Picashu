@@ -58,6 +58,8 @@ class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
 
 
         val currentUserId = FirebaseAuth.getInstance().uid
+
+        
         currentCard = requireArguments().getParcelable<Card>("POKE_CARD")
 
         val selectedUserId = requireArguments().getString("USER_ID")

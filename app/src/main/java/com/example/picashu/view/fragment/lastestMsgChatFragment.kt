@@ -29,6 +29,10 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.HashMap
 
 class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
 
@@ -55,6 +59,13 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
             Log.d("DetailAnnonceFragSid", "DetailAnnonceFragment:${fromUser}")
         })
 
+
+        val lastConnexionUser = FirebaseAuth.getInstance().currentUser?.metadata?.lastSignInTimestamp
+        val creationUser = FirebaseAuth.getInstance().currentUser?.metadata?.creationTimestamp
+
+        Log.d("LastMsgFrag"," lastSignInTimeStamp = ${getDateTime(lastConnexionUser.toString())}")
+        Log.d("LastMsgFrag"," creationTimeStamp = ${getDateTime(creationUser.toString())}")
+
         adapter.setOnItemClickListener { item, view ->
             val intent = Intent(context, ChatLogActivity::class.java)
             val row = item as LatestMessageRow
@@ -63,9 +74,22 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
             startActivity(intent)
         }
 
+
+
+
         listenForLatestMessages()
 
         return view
+    }
+
+    private fun getDateTime(s: String): String? {
+        try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy")
+            val netDate = Date(s.toLong() )
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            return e.toString()
+        }
     }
 
     private fun refreshRecyclerViewMessages() {
@@ -80,7 +104,7 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
 
         tradePopUp = Dialog(requireContext())
         tradePopUp.setContentView(R.layout.custom_pop_up)
-
+        
         val fromImg = tradePopUp.findViewById<ImageView>(R.id.user_profilImg_from)
         val toImg = tradePopUp.findViewById<ImageView>(R.id.user_profilImg_to)
         val exitBtn = tradePopUp.findViewById<ImageButton>(R.id.imageButtonExit)
@@ -104,10 +128,15 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
         }
 
         validateBtn.setOnClickListener {
+
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("MM/dd/yyyy")
+            val date = dateFormat.format(calendar.time)
+
             val avisCmt =  avis.text.toString()
             val livraisonRating = livraisonRatingBar.rating
             val communicationRating = communicationRatingBar.rating
-            val avis = Avis(communicationRating,livraisonRating,avisCmt,chatMessage.fromId,fromUser!!.profileImageUrl,fromUser!!.username)
+            val avis = Avis(communicationRating,livraisonRating,avisCmt,chatMessage.fromId,fromUser!!.profileImageUrl,fromUser!!.username,date)
 
             mViewModel.createAvis(avis,chatMessage.toId)
             tradePopUp.dismiss()

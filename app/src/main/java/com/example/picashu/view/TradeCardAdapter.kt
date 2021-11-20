@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.picashu.R
 import com.example.picashu.model.ResultsItem
 import com.example.picashu.model.TradeCard
+import com.google.firebase.firestore.FirebaseFirestore
 
 class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val listener: ItemClickListener) : RecyclerView.Adapter<TradeCardAdapter.PokeTradeCardListViewHolder>() {
 
@@ -51,6 +52,25 @@ class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val 
         val nbAvisUser = view.findViewById<TextView>(R.id.nb_user_avis)
 
         fun Bind( result : TradeCard ,clickListener: ItemClickListener){
+
+            val ref = FirebaseFirestore.getInstance()
+                .collection("/users/${result.userId}/avis")
+
+
+            ref.addSnapshotListener { snapshots, e ->
+
+                if (e != null) {
+                    Log.w("TAG", "listen:error", e)
+                    return@addSnapshotListener
+                }
+                    nbAvisUser.text = "${snapshots?.size()} Avis"
+
+
+            }
+
+            if (result.cardComment == ""){
+                commentBtn.visibility = View.INVISIBLE
+            }
 
             Log.d("TradeCardAdapter", "userProfilImg :${result.profilImg}")
 

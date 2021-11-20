@@ -27,6 +27,7 @@ class LatestMessageRow(private val chatMessage: ChatMessage,private val clicklis
             chatPartnerId = chatMessage.fromId
         }
 
+
         val ref = FirebaseFirestore.getInstance().collection("/users").document(chatPartnerId)
 
         ref.addSnapshotListener{snapshots, e ->
