@@ -20,7 +20,7 @@ import com.example.picashu.viewModel.PokemonApiViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
-class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCardAdapter.ItemClickListener {
+class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCardAdapter. ItemClickListener {
 
     private lateinit var binding: CardFragmentListBinding
     private lateinit var recyclerView: RecyclerView
@@ -86,6 +86,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
            // adapter.notifyDataSetChanged()
         })
     }
+
     private fun pokemonCardListApiCall() {
 
         mViewModel.cardResponse.observe(viewLifecycleOwner, Observer { response ->

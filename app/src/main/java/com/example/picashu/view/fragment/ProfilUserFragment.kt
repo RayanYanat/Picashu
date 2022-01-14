@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,9 +18,9 @@ import com.example.picashu.R
 import com.example.picashu.databinding.UserProfilFragmentBinding
 import com.example.picashu.model.Avis
 import com.example.picashu.model.Card
+import com.example.picashu.model.TradeCard
 import com.example.picashu.model.User
 import com.example.picashu.view.AvisTradeAdapter
-import com.example.picashu.view.PokemonCardAdapter
 import com.example.picashu.view.activity.ChatLogActivity
 import com.example.picashu.viewModel.PokemonApiViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -40,10 +39,14 @@ class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
     
     private var fromUser : User? = null
     private var currentCard : Card? = null
+    private var currentTradedCard : TradeCard? = null
 
     companion object {
         const val TO_USER_KEY = "USER_KEY"
         const val FROM_USER_KEY = "FROM_USER_KEY"
+        const val USER_ID = "USER_ID"
+        const val POKE_CARD = "POKE_CARD"
+
     }
 
     override fun onCreateView(
@@ -62,11 +65,11 @@ class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
         
         currentCard = requireArguments().getParcelable<Card>("POKE_CARD")
 
-        val selectedUserId = requireArguments().getString("USER_ID")
-        if (selectedUserId != null) {
+        currentTradedCard = requireArguments().getParcelable<TradeCard>("USER_ID")
+        if (currentTradedCard != null) {
             Log.d("profilUserID", "UserId : $currentUserId ")
 
-            mViewModel.getUser(selectedUserId).observe(viewLifecycleOwner,{
+            mViewModel.getUser(currentTradedCard!!.userId).observe(viewLifecycleOwner,{
                 selectedUserFromTrade = it
                 binding.usernameTradeUser.text = it.username
 
@@ -112,6 +115,8 @@ class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra(TO_USER_KEY,selectedUserFromTrade)
             intent.putExtra(FROM_USER_KEY,fromUser)
+            intent.putExtra(USER_ID,currentTradedCard)
+            intent.putExtra(POKE_CARD,currentCard)
             startActivity(intent)
 
         }

@@ -1,5 +1,6 @@
 package com.example.picashu.repository
 
+import com.example.picashu.Trade
 import com.example.picashu.model.Avis
 import com.example.picashu.model.Card
 import com.example.picashu.model.TradeCard
@@ -44,6 +45,10 @@ class FirebaseRepository {
         return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").whereEqualTo("serie",serie).get()
     }
 
+    fun getCurrentTradedCard(fromId: String,toId : String): Task<DocumentSnapshot> {
+        return FirebaseFirestore.getInstance().collection("/TradeBetweenUsers/$fromId/$toId").document("card").get()
+    }
+
     fun getCurrentTradedCardBySet(uid:String, set : String) : Task<QuerySnapshot?>{
         return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").whereEqualTo("set",set).get()
     }
@@ -80,4 +85,11 @@ class FirebaseRepository {
         return  FirebaseFirestore.getInstance().collection("/users/$uid/avis")
     }
 
+    fun addConcludedTrade(uid : String, trade : Trade) : Task<DocumentReference> {
+        return  FirebaseFirestore.getInstance().collection("/concludedTrade/$uid/trade").add(trade)
+    }
+
+    fun getConcludedTradeCollection(uid: String): CollectionReference{
+        return FirebaseFirestore.getInstance().collection("/concludedTrade/$uid/trade")
+    }
 }

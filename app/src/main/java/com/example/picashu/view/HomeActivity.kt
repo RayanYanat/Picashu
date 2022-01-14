@@ -8,11 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,14 +20,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.picashu.R
 import com.example.picashu.databinding.ActivityHomeBinding
+import com.example.picashu.view.fragment.ConcludedTradFragment
 import com.example.picashu.view.fragment.PokemonCollectionFragment
 import com.example.picashu.view.fragment.PokemonListFragment
-import com.example.picashu.view.fragment.lastestMsgChatFragment
+import com.example.picashu.view.fragment.LastestMsgChatFragment
 import com.example.picashu.viewModel.FirebaseViewModel
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -128,7 +127,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val pokemonCollectionFragment = PokemonCollectionFragment()
         val pokemonListFragment = PokemonListFragment()
-        val lastestMsgChatFragment = lastestMsgChatFragment()
+        val lastestMsgChatFragment = LastestMsgChatFragment()
+        val concludedTradeFragment = ConcludedTradFragment()
 
         when (item.itemId) {
 
@@ -147,7 +147,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
 
-            R.id.mes_ventes -> {
+            R.id.pokecardex -> {
                 supportFragmentManager.beginTransaction().replace(
                     R.id.main_fragment,
                     pokemonListFragment
@@ -158,6 +158,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(
                     R.id.main_fragment,
                     lastestMsgChatFragment
+                ).commit()
+            }
+
+            R.id.mes_echanges -> {
+                supportFragmentManager.beginTransaction().replace(
+                    R.id.main_fragment,
+                    concludedTradeFragment
                 ).commit()
             }
         }

@@ -41,7 +41,6 @@
                 app:civ_border_width="4dp"
                 app:layout_constraintBottom_toTopOf="@+id/card_trade_comment"
                 app:layout_constraintEnd_toStartOf="@+id/imageView2"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,7 +53,7 @@
                 app:civ_border_width="4dp"
                 app:layout_constraintBottom_toTopOf="@+id/card_trade_comment"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,8 +98,8 @@
                 android:id="@+id/button2"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:text="validate"
                 android:layout_marginBottom="5dp"
+                android:text="validate"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -145,15 +144,24 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="80dp"
-                android:layout_height="64dp"
-                app:layout_constraintBottom_toTopOf="@+id/card_trade_comment"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="1dp"
+                app:layout_constraintBottom_toBottomOf="@+id/user_profilImg_to"
                 app:layout_constraintEnd_toStartOf="@+id/user_profilImg_from"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/user_profilImg_to"
-                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_sync_alt_24"
                 tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/cardImgPopUp"
+                android:layout_marginTop="5dp"
+                android:layout_width="60dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/imageView2"
+                app:layout_constraintEnd_toStartOf="@+id/user_profilImg_from"
+                app:layout_constraintStart_toEndOf="@+id/user_profilImg_to"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

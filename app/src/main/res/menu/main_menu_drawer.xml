@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group>
-
+    <group android:id="@+id/grp1">
         <item
             android:id="@+id/mon_profile"
             android:title="mon profile">
         </item>
+    </group>
+
+    <group android:id="@+id/grp2">
         <item
-            android:id="@+id/mes_achats"
-            android:title="mes achats"/>
+            android:id="@+id/mes_echanges"
+            android:title="mes echanges"/>
+    </group>
 
+    <group android:id="@+id/grp3">
+        <item
+            android:id="@+id/pokecardex"
+            android:title="pokecardex" />
 
-                <item
-                    android:id="@+id/mes_ventes"
-                    android:title="mes ventes" />
+    </group>
 
-                <item
-                    android:id="@+id/methode_paiement"
-                    android:title="methode paiement" />
+    <group android:id="@+id/grp4">
+        <item
+            android:id="@+id/collection"
+            android:title="collection" />
+    </group>
 
-                <item
-                    android:id="@+id/collection"
-                    android:title="collection" />
+    <group android:id="@+id/grp5">
+        <item
+            android:id="@+id/chat"
+            android:title="chat" />
+    </group>
 
-                <item
-                    android:id="@+id/chat"
-                    android:title="chat" />
-
-
+    <group android:id="@+id/grp6">
         <item
             android:id="@+id/log_out"
             android:title="Logout">
         </item>
+    </group>
 
+    <group android:id="@+id/grp7">
+        <item
+            android:id="@+id/blank"
+            android:title="">
+        </item>
     </group>
 
 </menu>

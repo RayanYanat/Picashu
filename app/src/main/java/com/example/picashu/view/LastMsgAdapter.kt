@@ -48,11 +48,11 @@ class LatestMessageRow(private val chatMessage: ChatMessage,private val clicklis
         viewHolder.itemView.message_textview_latest_message.text = chatMessage.text
 
         viewHolder.itemView.imageButtonValidate.setOnClickListener {
-            clicklistener.onItemClickListenerValidate(chatMessage)
+            clicklistener.onItemClickListenerValidate(chatMessage,position)
         }
 
         viewHolder.itemView.imageButtonDelete.setOnClickListener {
-            clicklistener.onItemClickListenerDelete(chatMessage)
+            clicklistener.onItemClickListenerDelete(chatMessage,position)
         }
     }
 
@@ -61,7 +61,7 @@ class LatestMessageRow(private val chatMessage: ChatMessage,private val clicklis
     }
 
     interface ItemClickListener {
-        fun onItemClickListenerValidate(poke: ChatMessage)
-        fun onItemClickListenerDelete(poke: ChatMessage)
+        fun onItemClickListenerValidate(poke: ChatMessage,position: Int)
+        fun onItemClickListenerDelete(poke: ChatMessage, position: Int)
     }
 }

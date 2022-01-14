@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.picashu.PokemonApiService
+import com.example.picashu.Trade
 import com.example.picashu.model.*
 import com.example.picashu.model.CardResponse.ResponseCard
 import com.example.picashu.model.CardSetResponse.CardSet
@@ -28,10 +29,11 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
     val setResponse : MutableLiveData<CardSet>
 
 
-
+    var currentTradeCard : MutableLiveData<Trade> = MutableLiveData()
     var savedAvis  : MutableLiveData<List<Avis>> = MutableLiveData()
     var savedCard : MutableLiveData<List<Card>> = MutableLiveData()
     var savedTradeCardOffer : MutableLiveData<List<TradeCard>> = MutableLiveData()
+    var concludedTrade : MutableLiveData<List<Trade>> = MutableLiveData()
     var savedTradeCardFromSet : MutableLiveData<Int> = MutableLiveData()
     var savedTradeCardFromSeries : MutableLiveData<Int> = MutableLiveData()
 
@@ -95,6 +97,9 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
         firebaseRepository.DeleteTradeCardOffer(tradeCard,cardId,userUid)
     }
 
+    fun addConcludedTrade (uid : String , trade : Trade){
+        firebaseRepository.addConcludedTrade(uid,trade)
+    }
 
     fun getUser (uid: String) : LiveData<User> {
         val curreentUserr = MutableLiveData<User>()
@@ -104,6 +109,20 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
             curreentUserr.value = userItem!!
         }
         return curreentUserr
+    }
+
+    fun createAvis (avis: Avis, toId : String){
+        firebaseRepository.CreateAvis(avis,toId)
+    }
+
+    fun getCurrentTradeCard ( uid: String ,toUid : String) : LiveData<Trade> {
+        val curreentTradeCard = MutableLiveData<Trade>()
+        firebaseRepository.getCurrentTradedCard(uid,toUid).addOnSuccessListener {
+            val tradeItem = it.toObject(Trade::class.java)
+            currentTradeCard.value = tradeItem
+            curreentTradeCard.value = tradeItem!!
+        }
+        return curreentTradeCard
     }
 
     fun getSavedUserCards(uid: String): LiveData<List<Card>> {
@@ -160,6 +179,25 @@ class PokemonApiViewModel(app: Application)  : AndroidViewModel(app) {
         })
 
         return savedTradeCardOffer
+    }
+
+    fun getSavedConcludedTrade (uid: String): LiveData<List<Trade>>{
+        firebaseRepository.getConcludedTradeCollection(uid).addSnapshotListener(EventListener { value, e ->
+            if (e != null) {
+                Log.w(ContentValues.TAG, "Listen failed.", e)
+                concludedTrade.value = null
+                return@EventListener
+            }
+
+            val concludedTradeList : MutableList<Trade> = mutableListOf()
+            for (doc in value!!) {
+                val concludedTradeItem = doc.toObject(Trade::class.java)
+                concludedTradeList.add(concludedTradeItem)
+            }
+            concludedTrade.value = concludedTradeList
+        })
+
+        return concludedTrade
     }
 
 }

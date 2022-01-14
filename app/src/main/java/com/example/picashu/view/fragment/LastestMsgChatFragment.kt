@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.picashu.R
+import com.example.picashu.Trade
 import com.example.picashu.model.Avis
 import com.example.picashu.model.ChatMessage
 import com.example.picashu.model.User
@@ -24,20 +25,22 @@ import com.example.picashu.view.activity.ChatLogActivity
 import com.example.picashu.view.fragment.ProfilUserFragment.Companion.FROM_USER_KEY
 import com.example.picashu.view.fragment.ProfilUserFragment.Companion.TO_USER_KEY
 import com.example.picashu.viewModel.FirebaseViewModel
+import com.example.picashu.viewModel.PokemonApiViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.custom_pop_up.*
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
 
-class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
+class LastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
 
     private val adapter = GroupAdapter<ViewHolder>()
-    private lateinit var mViewModel: FirebaseViewModel
+    private lateinit var mViewModel: PokemonApiViewModel
     private val latestMessagesMap = HashMap<String, ChatMessage>()
     private var fromUser : User? = null
     private lateinit var tradePopUp : Dialog
@@ -49,7 +52,7 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
     ): View {
         val view: View = inflater.inflate(R.layout.lastes_chat_msg_fragment, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview_latest_messages)
-        mViewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
@@ -100,16 +103,24 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
         }
     }
 
-    private fun ShowPopup( chatMessage: ChatMessage){
+    private fun ShowPopup( chatMessage: ChatMessage,position: Int){
 
         tradePopUp = Dialog(requireContext())
         tradePopUp.setContentView(R.layout.custom_pop_up)
-        
+        val cardImage = tradePopUp.findViewById<ImageView>(R.id.cardImgPopUp)
         val fromImg = tradePopUp.findViewById<ImageView>(R.id.user_profilImg_from)
         val toImg = tradePopUp.findViewById<ImageView>(R.id.user_profilImg_to)
         val exitBtn = tradePopUp.findViewById<ImageButton>(R.id.imageButtonExit)
+        var currentTradeCard : Trade? = null
+
+        mViewModel.getCurrentTradeCard(chatMessage.fromId,chatMessage.toId).observe(viewLifecycleOwner, {
+            currentTradeCard = it
+            Glide.with(this).load(it.cardImg).into(cardImage)
+        })
+
 
         val validateBtn = tradePopUp.findViewById<Button>(R.id.button2)
+
 
         val avis = tradePopUp.findViewById<EditText>(R.id.trade_card_avis)
         val livraisonRatingBar = tradePopUp.findViewById<RatingBar>(R.id.ratingBar)
@@ -119,7 +130,6 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
         Glide.with(this).load(fromUser!!.profileImageUrl).into(fromImg)
 
         mViewModel.getUser(chatMessage.toId).observe(viewLifecycleOwner,{
-
             Glide.with(this).load(it.profileImageUrl).into(toImg)
         })
 
@@ -130,7 +140,7 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
         validateBtn.setOnClickListener {
 
             val calendar = Calendar.getInstance()
-            val dateFormat = SimpleDateFormat("MM/dd/yyyy")
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy")
             val date = dateFormat.format(calendar.time)
 
             val avisCmt =  avis.text.toString()
@@ -138,7 +148,16 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
             val communicationRating = communicationRatingBar.rating
             val avis = Avis(communicationRating,livraisonRating,avisCmt,chatMessage.fromId,fromUser!!.profileImageUrl,fromUser!!.username,date)
 
+            adapter.removeGroup(position)
+            adapter.notifyItemRemoved(position)
+
+            val latestMessageRef =
+                FirebaseFirestore.getInstance().collection("/latest-messages/${chatMessage.fromId}/contact")
+            latestMessageRef.document(chatMessage.toId).delete()
+
+
             mViewModel.createAvis(avis,chatMessage.toId)
+            mViewModel.addConcludedTrade(chatMessage.fromId,currentTradeCard!!)
             tradePopUp.dismiss()
 
         }
@@ -168,18 +187,22 @@ class lastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
                                 latestMessagesMap[dc.document.id] = chatMessage
                                 refreshRecyclerViewMessages()
                             }
-                            DocumentChange.Type.REMOVED -> { }
+                            DocumentChange.Type.REMOVED -> {
+
+                            }
                         }
                     }
                 }
             }
 
-    override fun onItemClickListenerValidate(poke: ChatMessage) {
+    override fun onItemClickListenerValidate(poke: ChatMessage,position :Int) {
+//        val trade = Trade(poke.fromId,poke.toId,)
         Log.d("lastestMsgChatFragment", "currentChatMessage:${poke.fromId} ")
-        ShowPopup(poke)
+        ShowPopup(poke,position)
+      //  mViewModel.addConcludedTrade(poke.fromId,trade)
     }
 
-    override fun onItemClickListenerDelete(poke: ChatMessage) {
+    override fun onItemClickListenerDelete(poke: ChatMessage, position :Int) {
         Log.d("lastestMsgChatFragment", "currentChatMessage:${poke.toId} ")
 
     }

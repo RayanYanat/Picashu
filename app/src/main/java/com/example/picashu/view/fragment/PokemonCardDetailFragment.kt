@@ -43,9 +43,7 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
 
     private val USER_ID = "USER_ID"
     private val POKE_CARD ="POKE_CARD"
-
-
-
+ 
     private var listTradeOffer = ArrayList<TradeCard>()
 
 
@@ -54,6 +52,7 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = DetailCardFragmentBinding.inflate(inflater, container, false)
         mainImageView = binding.pokemonCardMainPic
         recyclerView = binding.recyclerViewDataTrade
@@ -72,6 +71,7 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
         retrieveSelectedCardData()
         configureRecyclerView()
         return binding.root
+
     }
 
     private fun configureRecyclerView(){
@@ -155,7 +155,7 @@ class PokemonCardDetailFragment : Fragment(R.layout.detail_card_fragment),
 
     override fun onItemClickListener(poke: TradeCard) {
         val bundle = Bundle()
-        bundle.putString(USER_ID,poke.userId)
+        bundle.putParcelable(USER_ID,poke)
         bundle.putParcelable(POKE_CARD,currentCard)
         val profilUserFragment = ProfilUserFragment()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
