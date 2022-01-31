@@ -14,6 +14,6 @@ de cartes virtuelles et d'échanger des cartes avec des collectionneurs du monde
 ![Imgur](https://imgur.com/SLzENoU.png)
 ![Imgur](https://imgur.com/FQO411D.png)
 ![Imgur](https://imgur.com/7xj9353.png)
-![Imgur](https://imgur.com/eHs9IyZ.png)
+<img src="https://imgur.com/eHs9IyZ.png" width="387" height ="800" />
 ![Imgur](https://imgur.com/pHnZoq8.png)
-![Imgur](https://imgur.com/o7EW46f.png)
+<img src="https://imgur.com/o7EW46f.png" width="387" height ="800" />
