@@ -25,7 +25,7 @@ class FirebaseRepository {
     }
 
     fun createUser(username: String,uid: String , urlPicture: String?,email:String): Task<Void?> {
-        val userToCreate = User(username, uid, urlPicture!!,email)
+        val userToCreate = User(username, uid, urlPicture!!,email,"","",false)
         return getUsersCollection().document(uid).set(userToCreate)
     }
 
@@ -75,6 +75,22 @@ class FirebaseRepository {
 
     fun DeleteCard(card :Card, uid:String) : Task<Void> {
         return FirebaseFirestore.getInstance().collection("/users/$uid/cardCollection").document(card.id).delete()
+    }
+
+    fun UpdateUserCountry (userUid : String, country:String): Task<Void>{
+        return FirebaseFirestore.getInstance().collection("users").document(userUid).update("country",country)
+    }
+
+    fun UpdateUserPostCode (userUid : String, postCode:String): Task<Void>{
+        return FirebaseFirestore.getInstance().collection("users").document(userUid).update("postCode",postCode)
+    }
+
+    fun UpdateUserProfilImage(userUid : String, userImagePp:String): Task<Void>{
+        return FirebaseFirestore.getInstance().collection("users").document(userUid).update("profileImageUrl",userImagePp)
+    }
+
+    fun UpdateUsername (username: String,uid: String): Task<Void>{
+        return FirebaseFirestore.getInstance().collection("users").document(uid).update("username",username)
     }
 
     fun getUserCardCollection(uid:String): CollectionReference{

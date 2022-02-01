@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class PokemonApiRepository(val application: Application) {
+class PokemonApiRepository() {
 
     val response = MutableLiveData<PokemonListeResponse>()
     val cardResponse = MutableLiveData<Response>()

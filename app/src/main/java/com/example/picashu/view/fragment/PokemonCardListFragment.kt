@@ -15,16 +15,16 @@ import com.example.picashu.R
 import com.example.picashu.databinding.CardFragmentListBinding
 import com.example.picashu.model.Card
 import com.example.picashu.model.DataItem
-import com.example.picashu.view.PokemonCardAdapter
-import com.example.picashu.viewModel.PokemonApiViewModel
+import com.example.picashu.view.adapter.PokemonCardAdapter
+import com.example.picashu.viewModel.PokemonCardListFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
-class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCardAdapter. ItemClickListener {
+class PokemonCardListFragment : Fragment(R.layout.card_fragment_list), PokemonCardAdapter. ItemClickListener {
 
     private lateinit var binding: CardFragmentListBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var mViewModel: PokemonApiViewModel
+    private lateinit var mViewModel: PokemonCardListFragmentViewModel
     private lateinit var adapter: PokemonCardAdapter
 
     private val POKE_ID = "POKE_ID"
@@ -37,16 +37,12 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
 
     val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = CardFragmentListBinding.inflate(inflater, container, false)
-        mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
-        recyclerView = binding.recyclerViewCardData
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mViewModel = ViewModelProvider(this).get(PokemonCardListFragmentViewModel::class.java)
 
-
+        binding = CardFragmentListBinding.inflate(layoutInflater
+        )
         val currentCardName = requireArguments().getString("POKE_NAME")
         val currentSetId = requireArguments().getString("POKE_SET")
         Log.d("updateUI", "currentCardName:$currentCardName")
@@ -64,10 +60,41 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
 
         retrieveUserCard()
         pokemonCardListApiCall()
+    }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+       // binding = CardFragmentListBinding.inflate(inflater, container, false)
+
+        recyclerView = binding.recyclerViewCardData
+
+
+//        val currentCardName = requireArguments().getString("POKE_NAME")
+//        val currentSetId = requireArguments().getString("POKE_SET")
+//        Log.d("updateUI", "currentCardName:$currentCardName")
+//        val currentCardNameFor = "name:$currentCardName"
+//        val currentSetIdFor = "set.id:$currentSetId"
+//
+//        mViewModel.getSavedUserCards(currentUserId)
+//
+//        if (currentCardName != null){
+//            mViewModel.getPokemonCards(currentCardNameFor,"")
+//        }else if (currentSetId != null){
+//            mViewModel.getPokemonCards(currentSetIdFor,"")
+//        }
+//
+//
+//        retrieveUserCard()
+//        pokemonCardListApiCall()
         configureRecyclerView()
 
         return binding.root
     }
+
 
     private fun configureRecyclerView(){
 
@@ -80,7 +107,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
     }
 
     private fun retrieveUserCard(){
-        mViewModel.savedCard.observe(viewLifecycleOwner,{
+        mViewModel.savedCard.observe(this,{
             listUserCardData.addAll(it)
             Log.d("retrieveUserCard", "currentCardList:$listUserCardData zt size ${listUserCardData.size}")
            // adapter.notifyDataSetChanged()
@@ -89,10 +116,10 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
 
     private fun pokemonCardListApiCall() {
 
-        mViewModel.cardResponse.observe(viewLifecycleOwner, Observer { response ->
+        mViewModel.cardResponse.observe(this, Observer { response ->
             val result = response.data
             listPokemonCardData.addAll(result)
-
+            Log.d("PokemonCardListFragment", "listPokemonCardData = ${listUserCardData.size}")
             listPokemonCardData.forEach {
 
                     it.addBtnVisible = true
@@ -126,7 +153,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list),PokemonCar
         bundle.putParcelable(POKE_CARD,card)
         bundle.putString(POKE_ID, poke.id)
         pokemonCardDetailFragment.arguments = bundle
-        transaction.replace(R.id.main_fragment, pokemonCardDetailFragment).commit()
+        transaction.replace(R.id.main_fragment, pokemonCardDetailFragment).addToBackStack(null).commit()
         Log.d("currentBtnState", "currentBtnState: add = ${poke.addBtnVisible}; delete = ${poke.deleteBtnVisible}; trad = ${poke.tradeBtnVisible}")
     }
 

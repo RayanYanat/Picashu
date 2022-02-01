@@ -1,4 +1,4 @@
-package com.example.picashu.view
+package com.example.picashu.view.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -11,8 +11,6 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.core.view.MenuCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,13 +18,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.picashu.R
 import com.example.picashu.databinding.ActivityHomeBinding
-import com.example.picashu.view.fragment.ConcludedTradFragment
-import com.example.picashu.view.fragment.PokemonCollectionFragment
-import com.example.picashu.view.fragment.PokemonListFragment
-import com.example.picashu.view.fragment.LastestMsgChatFragment
-import com.example.picashu.viewModel.FirebaseViewModel
+import com.example.picashu.view.fragment.*
+import com.example.picashu.viewModel.HomeActivityViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,14 +31,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toolbar: Toolbar
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var mViewModel : FirebaseViewModel
+    private lateinit var mViewModel: HomeActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mViewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
 
         val pokemonListFragment = PokemonListFragment()
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment, pokemonListFragment)
@@ -57,6 +54,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         configureDrawerLayout()
         configureNavigationView()
     }
+
+
+
 
     private fun configureDrawerLayout() {
         val toggle = ActionBarDrawerToggle(
@@ -78,14 +78,21 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onBackPressed() {
         // 5 - Handle back click to close menu
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
+        val count = supportFragmentManager.backStackEntryCount
+
+        if (count == 0){
             super.onBackPressed()
+        }else{
+            supportFragmentManager.popBackStack()
         }
+//        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            this.drawerLayout.closeDrawer(GravityCompat.START)
+//        } else {
+//            super.onBackPressed()
+//        }
     }
 
-    private fun UpdateUiWhenCreating(){
+    private fun UpdateUiWhenCreating() {
         val currentUid = FirebaseAuth.getInstance().currentUser?.uid
         val autUid = FirebaseAuth.getInstance().uid
         Log.d("HomeActivity", "currentUserUid =: $currentUid et $autUid")
@@ -111,30 +118,59 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             })
         }
 
-
     }
 
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         if (uid == null) {
-            val intent = Intent(this, RegisterActivity::class.java)
+
+            val intent = Intent(this, AppIntroScreenActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+
+        } else {
+
+            val query = FirebaseFirestore.getInstance().collection("users").document(uid)
+            query.update("online", true)
+
+            val fbquery = FirebaseDatabase.getInstance("https://picashu-20d74-default-rtdb.europe-west1.firebasedatabase.app").getReference("/status/$uid")
+
+            fbquery.setValue("online").addOnSuccessListener {
+                Log.d("HomeActivity2", "FirebaseDatabase status currently updated")
+            }
+
+            fbquery.onDisconnect().setValue("offline")
+
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
         val pokemonCollectionFragment = PokemonCollectionFragment()
         val pokemonListFragment = PokemonListFragment()
         val lastestMsgChatFragment = LastestMsgChatFragment()
         val concludedTradeFragment = ConcludedTradFragment()
+        val mainProfilFragment = MainProfilFragment()
 
         when (item.itemId) {
 
+            R.id.mon_profile -> {
+               // supportFragmentManager.popBackStack()
+                supportFragmentManager.beginTransaction().replace(
+                    R.id.main_fragment,
+                    mainProfilFragment
+                ).commit()
+
+            }
+
             R.id.log_out -> {
                 FirebaseAuth.getInstance().signOut()
-                val intent = Intent(this, RegisterActivity::class.java)
+                val fbquery = FirebaseDatabase.getInstance("https://picashu-20d74-default-rtdb.europe-west1.firebasedatabase.app").getReference("/status/$uid")
+                fbquery.setValue("offline")
+
+                val intent = Intent(this, AppIntroScreenActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
@@ -148,6 +184,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.pokecardex -> {
+              //  supportFragmentManager.popBackStack()
                 supportFragmentManager.beginTransaction().replace(
                     R.id.main_fragment,
                     pokemonListFragment
@@ -162,6 +199,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.mes_echanges -> {
+               // supportFragmentManager.popBackStack()
                 supportFragmentManager.beginTransaction().replace(
                     R.id.main_fragment,
                     concludedTradeFragment
@@ -171,7 +209,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
 
     }
-
 
 
 }

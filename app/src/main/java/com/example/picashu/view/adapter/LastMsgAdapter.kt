@@ -1,10 +1,9 @@
-package com.example.picashu.view
+package com.example.picashu.view.adapter
 
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.example.picashu.R
 import com.example.picashu.model.ChatMessage
-import com.example.picashu.model.ResultsItem
 import com.example.picashu.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

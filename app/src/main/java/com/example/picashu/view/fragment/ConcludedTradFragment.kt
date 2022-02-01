@@ -12,14 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.picashu.R
 import com.example.picashu.Trade
 import com.example.picashu.databinding.ConcludedTradeFragmentBinding
-import com.example.picashu.view.ConcludedTradeAdapter
-import com.example.picashu.viewModel.PokemonApiViewModel
+import com.example.picashu.view.adapter.ConcludedTradeAdapter
+import com.example.picashu.viewModel.ConcludedTradFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ConcludedTradFragment : Fragment(R.layout.concluded_trade_fragment) {
 
     private lateinit var binding: ConcludedTradeFragmentBinding
-    private lateinit var mViewModel: PokemonApiViewModel
+    private lateinit var mViewModel: ConcludedTradFragmentViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ConcludedTradeAdapter
 
@@ -33,7 +33,7 @@ class ConcludedTradFragment : Fragment(R.layout.concluded_trade_fragment) {
     ): View? {
 
         binding = ConcludedTradeFragmentBinding.inflate(inflater, container, false)
-        mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(ConcludedTradFragmentViewModel::class.java)
         recyclerView = binding.concludedTradeRecyclerView
 
         mViewModel.getSavedConcludedTrade(currentUserId)

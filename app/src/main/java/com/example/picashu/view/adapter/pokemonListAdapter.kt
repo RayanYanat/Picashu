@@ -1,4 +1,4 @@
-package com.example.picashu.view
+package com.example.picashu.view.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,7 +34,7 @@ class PokemonListAdapter(private val listUser: List<ResultsItem>, private val li
     }
 
 
-    override fun onBindViewHolder(holder: PokemonListAdapter.PokeListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PokeListViewHolder, position: Int) {
         val pokeItem = mData.get(position)
 
         holder.bind(pokeItem,listener)

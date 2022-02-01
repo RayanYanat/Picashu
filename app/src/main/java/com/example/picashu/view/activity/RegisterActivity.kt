@@ -1,9 +1,8 @@
-package com.example.picashu.view
+package com.example.picashu.view.activity
 
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -11,13 +10,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.picashu.databinding.ActivityRegisterBinding
-import com.example.picashu.model.User
-import com.example.picashu.viewModel.FirebaseViewModel
+import com.example.picashu.viewModel.RegisterActivityViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
@@ -26,7 +22,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var  binding: ActivityRegisterBinding
     var selectedProfilImgUri : Uri? = null
     var profilImgUrl : String? = null
-    lateinit var mViewModel: FirebaseViewModel
+    lateinit var mViewModel: RegisterActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +32,7 @@ class RegisterActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         Log.d("RegisterActivity","uid  :  $uid")
 
-        mViewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(RegisterActivityViewModel::class.java)
         binding.registerButtonRegister.setOnClickListener(){
             performRegister()
         }
@@ -86,7 +82,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun uploadImageToFirebaseStorage() {
         if (selectedProfilImgUri == null) return
 
-        val filename = UUID.randomUUID().toString()
+        val filename = FirebaseAuth.getInstance().uid
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
 
         ref.putFile(selectedProfilImgUri!!)

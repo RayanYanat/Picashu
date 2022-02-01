@@ -1,25 +1,20 @@
-package com.example.picashu.view
+package com.example.picashu.view.adapter
 
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.picashu.R
 import com.example.picashu.model.Card
 import com.example.picashu.model.CardSetResponse.DataItem
 import com.example.picashu.model.ResultsItem
-import com.example.picashu.view.fragment.PokemonCardListFragment
 
 
-class PokemonSetAdapter(private val listDataSet: ArrayList<DataItem>, private val listener: PokemonSetChilAdapter.ItemClickListener,private val listSeries : List<String>,private val listUserCard : List<Card>) : RecyclerView.Adapter<PokemonSetAdapter.PokeSetListViewHolder>(){
+class PokemonSetAdapter(private val listDataSet: ArrayList<DataItem>, private val listener: PokemonSetChilAdapter.ItemClickListener, private val listSeries : List<String>, private val listUserCard : List<Card>) : RecyclerView.Adapter<PokemonSetAdapter.PokeSetListViewHolder>(){
 
     private var mData: ArrayList<String> = ArrayList()
     private var listPokemonSeries = ArrayList<String>()
@@ -41,8 +36,8 @@ class PokemonSetAdapter(private val listDataSet: ArrayList<DataItem>, private va
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PokemonSetAdapter.PokeSetListViewHolder {
-        return PokemonSetAdapter.PokeSetListViewHolder(
+    ): PokeSetListViewHolder {
+        return PokeSetListViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.collection_set_item, parent, false)
         )
     }

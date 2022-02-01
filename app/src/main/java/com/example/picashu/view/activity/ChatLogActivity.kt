@@ -1,19 +1,17 @@
-package com.example.picashu.view.activity
+ package com.example.picashu.view.activity
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.picashu.R
 import com.example.picashu.Trade
 import com.example.picashu.model.Card
 import com.example.picashu.model.ChatMessage
 import com.example.picashu.model.TradeCard
 import com.example.picashu.model.User
-import com.example.picashu.view.ChatFromItem
-import com.example.picashu.view.ChatToItem
+import com.example.picashu.view.adapter.ChatFromItem
+import com.example.picashu.view.adapter.ChatToItem
 import com.example.picashu.view.fragment.ProfilUserFragment
-import com.example.picashu.viewModel.FirebaseViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,7 +25,6 @@ import java.util.*
 class ChatLogActivity: AppCompatActivity() {
 
     private val adapter = GroupAdapter<ViewHolder>()
-    private lateinit var mViewModel: FirebaseViewModel
     private lateinit var chatMessage: ChatMessage
 
 
@@ -35,7 +32,7 @@ class ChatLogActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
 
-        mViewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+
         val user = intent.getParcelableExtra<User>(ProfilUserFragment.TO_USER_KEY)
 
 

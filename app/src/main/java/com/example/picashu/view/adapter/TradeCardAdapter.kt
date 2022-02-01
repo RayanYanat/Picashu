@@ -1,4 +1,4 @@
-package com.example.picashu.view
+package com.example.picashu.view.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.picashu.R
-import com.example.picashu.model.ResultsItem
 import com.example.picashu.model.TradeCard
+import com.example.picashu.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 
 class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val listener: ItemClickListener) : RecyclerView.Adapter<TradeCardAdapter.PokeTradeCardListViewHolder>() {
@@ -56,6 +56,19 @@ class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val 
             val ref = FirebaseFirestore.getInstance()
                 .collection("/users/${result.userId}/avis")
 
+            val userRef = FirebaseFirestore.getInstance()
+                .collection("/users/")
+
+          userRef.document(result.userId).get().addOnSuccessListener {
+              val userItem = it?.toObject(User::class.java)
+              tradeUsername.text = userItem?.username
+
+              if (userItem?.profileImageUrl != null){
+                  Glide.with(itemView).load(userItem.profileImageUrl).apply(RequestOptions.circleCropTransform()).into(userImage)
+              }
+
+          }
+
 
             ref.addSnapshotListener { snapshots, e ->
 
@@ -74,14 +87,14 @@ class TradeCardAdapter(private val listTradeOffer: List<TradeCard>, private val 
 
             Log.d("TradeCardAdapter", "userProfilImg :${result.profilImg}")
 
-            tradeUsername.text = result.username
+//            tradeUsername.text = result.username
             stateOfCard.text = result.etatCard
             languageOfCard.text = result.cardLanguage
             verionCard.text = result.versionCard
 
-            if (result.profilImg != null){
-                Glide.with(itemView).load(result.profilImg).apply(RequestOptions.circleCropTransform()).into(userImage)
-            }
+//            if (result.profilImg != null){
+//                Glide.with(itemView).load(result.profilImg).apply(RequestOptions.circleCropTransform()).into(userImage)
+//            }
 
             itemView.setOnClickListener {
                 clickListener.onItemClickListener(result)

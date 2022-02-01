@@ -15,15 +15,15 @@ import com.example.picashu.R
 import com.example.picashu.databinding.PokemonListFragmentBinding
 import com.example.picashu.model.PokemonListeResponse
 import com.example.picashu.model.ResultsItem
-import com.example.picashu.view.PokemonListAdapter
-import com.example.picashu.viewModel.PokemonApiViewModel
+import com.example.picashu.view.adapter.PokemonListAdapter
+import com.example.picashu.viewModel.PokemonListFragmentViewModel
 
 class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
     PokemonListAdapter.ItemClickListener {
 
     private lateinit var binding: PokemonListFragmentBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var mViewModel: PokemonApiViewModel
+    private lateinit var mViewModel: PokemonListFragmentViewModel
     private lateinit var adapter: PokemonListAdapter
 
     private var readyToChargeList: Boolean = false
@@ -48,7 +48,8 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
     ): View {
         binding = PokemonListFragmentBinding.inflate(inflater, container, false)
         val view = binding.root
-        mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
+        activity?.supportFragmentManager?.popBackStack()
+        mViewModel = ViewModelProvider(this).get(PokemonListFragmentViewModel::class.java)
         recyclerView = binding.recyclerViewDataStat
         mViewModel.getPokemonIds(20, offset)
         pokemonListApiCall2()
@@ -117,6 +118,7 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
 
 //            //updateUI(listPokemonData)
             val result = it.results
+            Log.d("pokemonApiCall", "POKELISTapi2: ${it.results?.size}) ")
             result?.forEach {
                 if (!listPokemonData.contains(it)) {
                     listPokemonData.add(it!!)
@@ -151,8 +153,13 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             bundle.putString(POKE_NAME,pokemonName)
             pokemonCardListFragment.arguments = bundle
-            transaction.replace(R.id.main_fragment, pokemonCardListFragment).commit()
+            transaction.replace(R.id.main_fragment, pokemonCardListFragment).addToBackStack(null).commit()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("pokemonListFrag", "onresume:" )
     }
 
     override fun onItemClickListener(poke: ResultsItem) {
@@ -162,8 +169,10 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         bundle.putString(POKE_NAME, poke.name)
         pokemonCardListFragment.arguments = bundle
-        transaction.replace(R.id.main_fragment, pokemonCardListFragment).commit()
+        transaction.replace(R.id.main_fragment, pokemonCardListFragment).addToBackStack(null).commit()
 
     }
 }
+
+
 

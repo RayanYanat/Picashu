@@ -1,4 +1,4 @@
-package com.example.picashu.view
+package com.example.picashu.view.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,8 +11,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.picashu.R
 import com.example.picashu.model.Avis
-import com.example.picashu.model.DataItem
-import com.example.picashu.model.TradeCard
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AvisTradeAdapter (): RecyclerView.Adapter<AvisTradeViewHolder>() {
@@ -27,7 +25,7 @@ class AvisTradeAdapter (): RecyclerView.Adapter<AvisTradeViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ):AvisTradeViewHolder{
+    ): AvisTradeViewHolder {
         return AvisTradeViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.avis_trade_item, parent, false)
         )

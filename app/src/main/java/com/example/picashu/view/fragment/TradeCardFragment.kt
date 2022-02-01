@@ -11,16 +11,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.picashu.R
 import com.example.picashu.databinding.TradeCardFragmentBinding
-import com.example.picashu.model.Card
 import com.example.picashu.model.TradeCard
-import com.example.picashu.viewModel.PokemonApiViewModel
+import com.example.picashu.viewModel.TradeCardFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.trade_card_fragment.*
 
 class TradeCardFragment : Fragment(R.layout.trade_card_fragment) {
 
     private lateinit var binding : TradeCardFragmentBinding
-    private lateinit var mViewModel: PokemonApiViewModel
+    private lateinit var mViewModel: TradeCardFragmentViewModel
     private lateinit var mainImageView: ImageView
     private lateinit var currentCardId : String
     private lateinit var currentCardImage : String
@@ -37,7 +36,7 @@ class TradeCardFragment : Fragment(R.layout.trade_card_fragment) {
     ): View {
         binding = TradeCardFragmentBinding.inflate(inflater, container, false)
         mainImageView = binding.pokemonTradeCardMainPic
-        mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(TradeCardFragmentViewModel::class.java)
 
         currentCardId = requireArguments().getString("POKE_ID").toString()
         currentCardImage = requireArguments().getString("POKE_IMG_URL").toString()

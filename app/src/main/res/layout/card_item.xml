@@ -11,33 +11,40 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:src="@drawable/ic_anon_user_48dp"/>
 
     <ImageButton
         android:id="@+id/addButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:visibility="visible"
+        android:background="#758EE6"
+        android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/pokemon_card_main_pic"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/ic_baseline_add_24"/>
 
     <ImageButton
         android:id="@+id/deleteButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:background="#C56975"
+        android:layout_height="30dp"
         android:visibility="invisible"
+        android:layout_marginStart="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/pokemon_card_main_pic"
         app:layout_constraintStart_toEndOf="@id/tradeButton"
         android:src="@drawable/ic_baseline_delete_24" />
 
     <ImageButton
+        android:background="#72B566"
         android:id="@+id/tradeButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:visibility="invisible"
+        android:layout_marginStart="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/pokemon_card_main_pic"
         app:layout_constraintStart_toEndOf="@+id/addButton"
         android:src="@drawable/ic_baseline_autorenew_24">

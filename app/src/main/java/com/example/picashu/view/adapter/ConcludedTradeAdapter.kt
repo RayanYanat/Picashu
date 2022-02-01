@@ -1,4 +1,4 @@
-package com.example.picashu.view
+package com.example.picashu.view.adapter
 
 import android.util.Log
 import android.view.LayoutInflater

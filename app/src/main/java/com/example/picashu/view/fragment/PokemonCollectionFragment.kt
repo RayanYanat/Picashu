@@ -14,9 +14,9 @@ import com.example.picashu.databinding.CollectionFragmentListBinding
 import com.example.picashu.model.Card
 import com.example.picashu.model.CardSetResponse.DataItem
 import com.example.picashu.model.ResultsItem
-import com.example.picashu.view.PokemonSetAdapter
-import com.example.picashu.view.PokemonSetChilAdapter
-import com.example.picashu.viewModel.PokemonApiViewModel
+import com.example.picashu.view.adapter.PokemonSetAdapter
+import com.example.picashu.view.adapter.PokemonSetChilAdapter
+import com.example.picashu.viewModel.PokemonCollectionFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class PokemonCollectionFragment : Fragment(R.layout.collection_fragment_list), PokemonSetAdapter.ItemClickListener,
@@ -24,7 +24,7 @@ class PokemonCollectionFragment : Fragment(R.layout.collection_fragment_list), P
 
     private lateinit var binding: CollectionFragmentListBinding
     private lateinit var recyclerView: RecyclerView
-    private lateinit var mViewModel: PokemonApiViewModel
+    private lateinit var mViewModel: PokemonCollectionFragmentViewModel
     private lateinit var adapter: PokemonSetAdapter
 
     private var listPokemonSetData = ArrayList<DataItem>()
@@ -44,7 +44,7 @@ class PokemonCollectionFragment : Fragment(R.layout.collection_fragment_list), P
     ): View? {
         binding = CollectionFragmentListBinding.inflate(inflater, container, false)
         val view = binding.root
-        mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(PokemonCollectionFragmentViewModel::class.java)
         recyclerView = binding.recyclerViewSetData
         mViewModel.getPokemonSets("","")
         mViewModel.getSavedUserCards(currentUserId)

@@ -1,4 +1,4 @@
-package com.example.picashu.view
+package com.example.picashu.view.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -76,7 +76,7 @@ class PokemonCardAdapter(private val listUser: List<DataItem>, private val liste
 
 
 
-        fun bind(result : DataItem, clickListener: ItemClickListener,position: Int){
+        fun bind(result : DataItem, clickListener: ItemClickListener, position: Int){
 
 
 

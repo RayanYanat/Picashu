@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Picashu">
-        <activity android:name=".view.RegisterActivity"
+        <activity android:name=".view.activity.HomeActivity"
             android:theme="@style/Theme.Picashu.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,10 +17,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.LoginActivity"
+        <activity android:name=".view.activity.AppIntroScreenActivity"
+            android:theme="@style/Theme.Picashu.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.activity.RegisterActivity"
+            android:theme="@style/Theme.Picashu.NoActionBar">
+        </activity>
+        <activity android:name=".view.activity.LoginActivity"
             android:theme="@style/Theme.Picashu.NoActionBar"/>
-        <activity android:name=".view.HomeActivity"
-            android:theme="@style/Theme.Picashu.NoActionBar"/>
+
         <activity android:name=".view.activity.ChatLogActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
     </application>

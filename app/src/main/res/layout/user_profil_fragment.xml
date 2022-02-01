@@ -62,7 +62,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/username_trade_user" />
+                app:layout_constraintTop_toBottomOf="@id/Connexion_trade_user" />
 
             <TextView
                 android:id="@+id/echangeNb_trade_user"
@@ -74,50 +74,118 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/localisation_trade_user" />
+                app:layout_constraintTop_toBottomOf="@id/username_trade_user" />
 
             <TextView
-                android:id="@+id/lastConnexion_trade_user"
+                android:id="@+id/Connexion_trade_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="dernière connexion : hier"
+                android:text="statut : online"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/echangeNb_trade_user" />
 
-            <TextView
+<!--            <TextView-->
 
-                android:id="@+id/fiabilité_trade_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="fiabilité : 100%"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lastConnexion_trade_user" />
+<!--                android:id="@+id/fiabilité_trade_user"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="fiabilité : 100%"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="16sp"-->
+<!--                android:layout_marginBottom="10dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/lastConnexion_trade_user" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:layout_marginStart="5dp"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="cette utilisateur échange aussi 54 carte de la serie BASE et 22 cartes du set Jungle"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/send_msg_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
         app:layout_constraintTop_toTopOf="parent">
 
-    </TextView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/set_card_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/purple_200"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_margin="6dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/set_name_user_profil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="set base:"/>
+
+                <TextView
+                    android:id="@+id/lien_set_collections"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColor="#283593"
+                    android:text="-> see cards(45)"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/series_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:cardBackgroundColor="@color/purple_200"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_margin="6dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/series_name_user_profil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="series base:"/>
+
+                <TextView
+                    android:id="@+id/lien_series_collections"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColor="#283593"
+                    android:text="-> see cards (45)"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/send_msg_button"

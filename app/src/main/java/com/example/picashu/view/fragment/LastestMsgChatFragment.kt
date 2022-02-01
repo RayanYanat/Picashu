@@ -18,14 +18,11 @@ import com.example.picashu.Trade
 import com.example.picashu.model.Avis
 import com.example.picashu.model.ChatMessage
 import com.example.picashu.model.User
-import com.example.picashu.view.ChatFromItem
-import com.example.picashu.view.ChatToItem
-import com.example.picashu.view.LatestMessageRow
+import com.example.picashu.view.adapter.LatestMessageRow
 import com.example.picashu.view.activity.ChatLogActivity
 import com.example.picashu.view.fragment.ProfilUserFragment.Companion.FROM_USER_KEY
 import com.example.picashu.view.fragment.ProfilUserFragment.Companion.TO_USER_KEY
-import com.example.picashu.viewModel.FirebaseViewModel
-import com.example.picashu.viewModel.PokemonApiViewModel
+import com.example.picashu.viewModel.LatestMsgFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,14 +30,13 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.custom_pop_up.*
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
 
 class LastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
 
     private val adapter = GroupAdapter<ViewHolder>()
-    private lateinit var mViewModel: PokemonApiViewModel
+    private lateinit var mViewModel: LatestMsgFragmentViewModel
     private val latestMessagesMap = HashMap<String, ChatMessage>()
     private var fromUser : User? = null
     private lateinit var tradePopUp : Dialog
@@ -52,7 +48,7 @@ class LastestMsgChatFragment: Fragment(), LatestMessageRow.ItemClickListener {
     ): View {
         val view: View = inflater.inflate(R.layout.lastes_chat_msg_fragment, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview_latest_messages)
-        mViewModel = ViewModelProvider(this).get(PokemonApiViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(LatestMsgFragmentViewModel::class.java)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
