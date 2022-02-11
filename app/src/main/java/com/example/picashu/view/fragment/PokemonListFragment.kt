@@ -1,6 +1,7 @@
 package com.example.picashu.view.fragment
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,10 @@ import com.example.picashu.model.PokemonListeResponse
 import com.example.picashu.model.ResultsItem
 import com.example.picashu.view.adapter.PokemonListAdapter
 import com.example.picashu.viewModel.PokemonListFragmentViewModel
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
+
 
 class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
     PokemonListAdapter.ItemClickListener {
@@ -25,6 +30,8 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
     private lateinit var recyclerView: RecyclerView
     private lateinit var mViewModel: PokemonListFragmentViewModel
     private lateinit var adapter: PokemonListAdapter
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
+
 
     private var readyToChargeList: Boolean = false
     private var offset = 0
@@ -46,14 +53,26 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         binding = PokemonListFragmentBinding.inflate(inflater, container, false)
         val view = binding.root
-        activity?.supportFragmentManager?.popBackStack()
+
+        shimmerFrameLayout = binding.pokemonListShimmerLayout
+        shimmerFrameLayout.startShimmer()
+
+
+        Handler().postDelayed({
+            shimmerFrameLayout.stopShimmer()
+            shimmerFrameLayout.visibility = View.GONE
+        },2000)
+
+
         mViewModel = ViewModelProvider(this).get(PokemonListFragmentViewModel::class.java)
         recyclerView = binding.recyclerViewDataStat
         mViewModel.getPokemonIds(20, offset)
         pokemonListApiCall2()
         configureRecyclerView()
+
 
         return view
     }
@@ -151,7 +170,7 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
             val bundle = Bundle()
             val pokemonCardListFragment = PokemonCardListFragment()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            bundle.putString(POKE_NAME,pokemonName)
+            bundle.putString(POKE_NAME, pokemonName)
             pokemonCardListFragment.arguments = bundle
             transaction.replace(R.id.main_fragment, pokemonCardListFragment).addToBackStack(null).commit()
         }
@@ -159,7 +178,7 @@ class PokemonListFragment : Fragment(R.layout.pokemon_list_fragment),
 
     override fun onResume() {
         super.onResume()
-        Log.d("pokemonListFrag", "onresume:" )
+        Log.d("pokemonListFrag", "onresume:")
     }
 
     override fun onItemClickListener(poke: ResultsItem) {

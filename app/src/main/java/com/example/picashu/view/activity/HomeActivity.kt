@@ -11,7 +11,9 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -40,8 +42,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
 
+        val count = supportFragmentManager.backStackEntryCount
+        Log.d("HomeActivity", " MainActivity backstack count =: $count")
+
         val pokemonListFragment = PokemonListFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.main_fragment, pokemonListFragment)
+        supportFragmentManager.beginTransaction().add(R.id.main_fragment, pokemonListFragment)
             .commit()
 
         toolbar = binding.toolbar
@@ -56,7 +61,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
+    override fun onResume() {
+        super.onResume()
+        var count = supportFragmentManager.backStackEntryCount
+        Log.d("HomeActivity", " MainActivity onResume backstack count =: $count")
+    }
 
     private fun configureDrawerLayout() {
         val toggle = ActionBarDrawerToggle(
@@ -78,18 +87,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onBackPressed() {
         // 5 - Handle back click to close menu
-        val count = supportFragmentManager.backStackEntryCount
+        var count = supportFragmentManager.backStackEntryCount
+        Log.d("HomeActivity", " MainActivity onResume backstack count =: $count")
 
-        if (count == 0){
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
             super.onBackPressed()
-        }else{
-            supportFragmentManager.popBackStack()
         }
-//        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            this.drawerLayout.closeDrawer(GravityCompat.START)
-//        } else {
-//            super.onBackPressed()
-//        }
     }
 
     private fun UpdateUiWhenCreating() {
@@ -154,15 +159,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val concludedTradeFragment = ConcludedTradFragment()
         val mainProfilFragment = MainProfilFragment()
 
+        supportFragmentManager.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
         when (item.itemId) {
 
             R.id.mon_profile -> {
-               // supportFragmentManager.popBackStack()
-                supportFragmentManager.beginTransaction().replace(
+                supportFragmentManager.beginTransaction()
+                    .add(pokemonListFragment,"pokemonListFragment")
+                    .addToBackStack("pokemonListFragment")
+                    .replace(
                     R.id.main_fragment,
                     mainProfilFragment
                 ).commit()
-
             }
 
             R.id.log_out -> {
@@ -176,7 +184,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.collection -> {
-                supportFragmentManager.beginTransaction().replace(
+                supportFragmentManager.beginTransaction()
+                    .add(pokemonListFragment,"pokemonListFragment")
+                    .addToBackStack("pokemonListFragment").replace(
                     R.id.main_fragment,
                     pokemonCollectionFragment
                 ).commit()
@@ -185,22 +195,31 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.pokecardex -> {
               //  supportFragmentManager.popBackStack()
-                supportFragmentManager.beginTransaction().replace(
+                supportFragmentManager.beginTransaction()
+                    .add(pokemonListFragment,"pokemonListFragment")
+                    .addToBackStack("pokemonListFragment")
+                    .replace(
                     R.id.main_fragment,
                     pokemonListFragment
                 ).commit()
             }
 
             R.id.chat -> {
-                supportFragmentManager.beginTransaction().replace(
+                supportFragmentManager.beginTransaction()
+                    .add(pokemonListFragment,"pokemonListFragment")
+                    .addToBackStack("pokemonListFragment")
+                    .replace(
                     R.id.main_fragment,
                     lastestMsgChatFragment
                 ).commit()
             }
 
             R.id.mes_echanges -> {
-               // supportFragmentManager.popBackStack()
-                supportFragmentManager.beginTransaction().replace(
+
+                supportFragmentManager.beginTransaction()
+                    .add(pokemonListFragment,"pokemonListFragment")
+                    .addToBackStack("pokemonListFragment")
+                    .replace(
                     R.id.main_fragment,
                     concludedTradeFragment
                 ).commit()

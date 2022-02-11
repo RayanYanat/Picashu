@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -80,9 +81,15 @@ class TradeCardFragment : Fragment(R.layout.trade_card_fragment) {
             val versionCard = version_card.text.toString()
             val cardComment = trade_card_desc.text.toString()
 
-            val tradeCardToAdd = TradeCard(currentCardId,currentUsername,versionCard,stateOfCard,cardComment,cardLangue,currentUserId,currentUserImg)
 
-            mViewModel.CreateTradeCard(tradeCardToAdd,currentUserId,currentCardId)
+
+            if (stateOfCard.isEmpty() || cardLangue.isEmpty() || versionCard.isEmpty() || cardComment.isEmpty()){
+                Toast.makeText(context,"please enter a email, a password and a username", Toast.LENGTH_SHORT).show()
+            }else{
+                val tradeCardToAdd = TradeCard(currentCardId,currentUsername,versionCard,stateOfCard,cardComment,cardLangue,currentUserId,currentUserImg)
+                mViewModel.CreateTradeCard(tradeCardToAdd,currentUserId,currentCardId)
+                activity?.supportFragmentManager?.popBackStack()
+            }
 
         }
 

@@ -30,21 +30,21 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
+class ProfilUserFragment : Fragment(R.layout.user_profil_fragment) {
 
-    private lateinit var binding : UserProfilFragmentBinding
+    private lateinit var binding: UserProfilFragmentBinding
     private lateinit var mViewModel: ProfilUserFragmentViewModel
-    private lateinit var userProfilImg : ImageView
+    private lateinit var userProfilImg: ImageView
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AvisTradeAdapter
 
     private var listUserAvis = ArrayList<Avis>()
 
-    private lateinit var selectedUserFromTrade : User
-    
-    private var fromUser : User? = null
-    private var currentCard : Card? = null
-    private var currentTradedCard : TradeCard? = null
+    private lateinit var selectedUserFromTrade: User
+
+    private var fromUser: User? = null
+    private var currentCard: Card? = null
+    private var currentTradedCard: TradeCard? = null
 
     companion object {
         const val TO_USER_KEY = "USER_KEY"
@@ -54,6 +54,8 @@ class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
         const val POKE_SET = "POKE_SET"
         const val POKE_SERIES = "POKE_SERIES"
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,77 +77,91 @@ class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
             mViewModel.getSavedConcludedTrade(currentTradedCard!!.userId)
 
 
+
             mViewModel.concludedTrade.observe(viewLifecycleOwner, Observer {
                 binding.echangeNbTradeUser.text = "${it.size} échanges"
             })
 
-            Log.d("profilUserID", "UserId : $currentUserId ")
-
-            mViewModel.getUser(currentTradedCard!!.userId).observe(viewLifecycleOwner,{
+            mViewModel.getUser(currentTradedCard!!.userId).observe(viewLifecycleOwner, {
                 selectedUserFromTrade = it
-                binding.usernameTradeUser.text = it.username
-
-                if (it.country != "" && it.postCode != ""){
-                    binding.localisationTradeUser.text = "${it.country}(${it.postCode})"
-                }else if (it.country != "" && it.postCode == ""){
-                    binding.localisationTradeUser.text = "${it.country}"
-                }else if (it.country == "" && it.postCode != ""){
-                    binding.localisationTradeUser.text = "${it.postCode}"
-                }else if (it.country == "" && it.postCode == ""){
-                    binding.localisationTradeUser.text = ""
-                }
-
-                Glide.with(this)
-                    .load(Uri.parse(it.profileImageUrl))
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(userProfilImg)
-
-
-                val fbquery = FirebaseDatabase.getInstance("https://picashu-20d74-default-rtdb.europe-west1.firebasedatabase.app").getReference("/status/${selectedUserFromTrade.uid}")
-                fbquery.addValueEventListener(object : ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                       val statut = snapshot.getValue(String::class.java)
-                        binding.ConnexionTradeUser.text = "statut : $statut"
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-
-                mViewModel.getCurrentTradedCardBySet(selectedUserFromTrade!!.uid!!, currentCard!!.set).observe(viewLifecycleOwner,{
-                    binding.setNameUserProfil.text = "set ${currentCard!!.set} :"
-                    binding.lienSetCollections.text = "-> see cards($it)   "
-                    Log.d("profilUserSetCardNB", "NOMBRE : $it ")
-                    Log.d("profilUserSetCardNB", "NOMBRE : ${selectedUserFromTrade?.uid} ")
-                })
-
-                mViewModel.getCurrentTradedCardBySerie(selectedUserFromTrade!!.uid!!, currentCard!!.serie).observe(viewLifecycleOwner,{
-                    binding.seriesNameUserProfil.text = "serie ${currentCard!!.serie} :"
-                    binding.lienSeriesCollections.text = "-> see cards($it)"
-
-                    Log.d("profilUserSerieCardNB", "NOMBRE serie: $it ")
-                    Log.d("profilUserSerieCardNB", "NOMBRE serie: ${selectedUserFromTrade?.uid} ")
-                })
-
-                mViewModel.getUser(currentUserId!!).observe(viewLifecycleOwner,{
-                    fromUser = it
-                })
-
-                mViewModel.getSavedUserAvis(selectedUserFromTrade!!.uid!!)
-                retrieveUserAvis()
-                configureRecyclerView()
+                mViewModel.getSavedUserAvis(it.uid!!)
+                updateProfilUi(it, currentCard!!)
+                manageUserPresence()
             })
+
+            mViewModel.getUser(currentUserId!!).observe(viewLifecycleOwner, {
+                fromUser = it
+            })
+
+           // manageUserPresence()
+            retrieveUserAvis()
+            configureRecyclerView()
+
 
         }
 
         return binding.root
     }
 
+    fun updateProfilUi(user: User, card: Card) {
+
+        binding.usernameTradeUser.text = user.username
+
+        if (user.country != "" && user.postCode != "") {
+            binding.localisationTradeUser.text = "${user.country}(${user.postCode})"
+        } else if (user.country != "" && user.postCode == "") {
+            binding.localisationTradeUser.text = "${user.country}"
+        } else if (user.country == "" && user.postCode != "") {
+            binding.localisationTradeUser.text = "${user.postCode}"
+        } else if (user.country == "" && user.postCode == "") {
+            binding.localisationTradeUser.text = ""
+        }
+
+        Glide.with(this)
+            .load(Uri.parse(user.profileImageUrl))
+            .apply(RequestOptions.circleCropTransform())
+            .into(userProfilImg)
+
+        mViewModel.getCurrentTradedCardBySet(user.uid!!, card.set).observe(viewLifecycleOwner, {
+            binding.setNameUserProfil.text = "set ${card.set} :"
+            binding.lienSetCollections.text = "-> see cards($it)   "
+            Log.d("profilUserSetCardNB", "NOMBRE : $it ")
+            Log.d("profilUserSetCardNB", "NOMBRE : ${user.uid} ")
+        })
+
+        mViewModel.getCurrentTradedCardBySerie(user.uid!!, card.serie).observe(viewLifecycleOwner, {
+            binding.seriesNameUserProfil.text = "serie ${card.serie} :"
+            binding.lienSeriesCollections.text = "-> see cards($it)"
+
+            Log.d("profilUserSerieCardNB", "NOMBRE serie: $it ")
+            Log.d("profilUserSerieCardNB", "NOMBRE serie: ${user.uid} ")
+        })
+
+    }
+
+
+    fun manageUserPresence() {
+
+        val fbquery =
+            FirebaseDatabase.getInstance("https://picashu-20d74-default-rtdb.europe-west1.firebasedatabase.app")
+                .getReference("/status/${selectedUserFromTrade.uid}")
+        fbquery.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val statut = snapshot.getValue(String::class.java)
+                binding.ConnexionTradeUser.text = "statut : $statut"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      //  Log.d("profilUserSelected", "NOMBRE : $selectedUserFromTrade ")
+        //  Log.d("profilUserSelected", "NOMBRE : $selectedUserFromTrade ")
 
         //Log.d("selectedUserOnView", "selectedUser : $selectedUserFromTrade ")
 
@@ -154,47 +170,50 @@ class ProfilUserFragment: Fragment(R.layout.user_profil_fragment) {
             Log.d("profilUserSelected", "NOMBRE : $selectedUserFromTrade ")
 
             val intent = Intent(view.context, ChatLogActivity::class.java)
-            intent.putExtra(TO_USER_KEY,selectedUserFromTrade)
-            intent.putExtra(FROM_USER_KEY,fromUser)
-            intent.putExtra(USER_ID,currentTradedCard)
-            intent.putExtra(POKE_CARD,currentCard)
+            intent.putExtra(TO_USER_KEY, selectedUserFromTrade)
+            intent.putExtra(FROM_USER_KEY, fromUser)
+            intent.putExtra(USER_ID, currentTradedCard)
+            intent.putExtra(POKE_CARD, currentCard)
             startActivity(intent)
 
         }
 
-        binding.lienSetCollections.setOnClickListener{
+        binding.lienSetCollections.setOnClickListener {
             val bundle = Bundle()
             val set = currentCard?.set
             val toUserCardCollectionFragment = ToUserCardCollection()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            bundle.putString(POKE_SET,set)
+            bundle.putString(POKE_SET, set)
             bundle.putString(USER_ID, selectedUserFromTrade.uid)
             toUserCardCollectionFragment.arguments = bundle
-            transaction.replace(R.id.main_fragment, toUserCardCollectionFragment).addToBackStack(null).commit()
+            transaction.replace(R.id.main_fragment, toUserCardCollectionFragment)
+                .addToBackStack(null).commit()
         }
 
-        binding.lienSeriesCollections.setOnClickListener{
+        binding.lienSeriesCollections.setOnClickListener {
             val bundle = Bundle()
             val serie = currentCard?.serie
             val toUserCardCollectionFragment = ToUserCardCollection()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            bundle.putString(POKE_SERIES,serie)
+            bundle.putString(POKE_SERIES, serie)
             bundle.putString(USER_ID, selectedUserFromTrade.uid)
             toUserCardCollectionFragment.arguments = bundle
-            transaction.replace(R.id.main_fragment, toUserCardCollectionFragment).addToBackStack(null).commit()
+            transaction.replace(R.id.main_fragment, toUserCardCollectionFragment)
+                .addToBackStack(null).commit()
         }
 
     }
 
-    fun retrieveUserAvis(){
+    fun retrieveUserAvis() {
         mViewModel.savedAvis.observe(viewLifecycleOwner, {
-           listUserAvis.addAll(it)
+            listUserAvis.clear()
+            listUserAvis.addAll(it)
             adapter.notifyDataSetChanged()
             Log.d("profilUserListAvis", "listAvis: $it ")
         })
     }
 
-    fun configureRecyclerView(){
+    fun configureRecyclerView() {
 
         adapter = AvisTradeAdapter()
         val layoutManager = LinearLayoutManager(activity)

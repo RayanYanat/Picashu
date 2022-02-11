@@ -1,6 +1,7 @@
 package com.example.picashu.view.fragment
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.example.picashu.model.Card
 import com.example.picashu.model.DataItem
 import com.example.picashu.view.adapter.PokemonCardAdapter
 import com.example.picashu.viewModel.PokemonCardListFragmentViewModel
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -26,6 +28,8 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list), PokemonCa
     private lateinit var recyclerView: RecyclerView
     private lateinit var mViewModel: PokemonCardListFragmentViewModel
     private lateinit var adapter: PokemonCardAdapter
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
+
 
     private val POKE_ID = "POKE_ID"
     private val POKE_CARD ="POKE_CARD"
@@ -72,6 +76,14 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list), PokemonCa
 
         recyclerView = binding.recyclerViewCardData
 
+        shimmerFrameLayout = binding.shimmetViewLayout
+        shimmerFrameLayout.startShimmer()
+
+
+        Handler().postDelayed({
+            shimmerFrameLayout.stopShimmer()
+            shimmerFrameLayout.visibility = View.GONE
+        },2000)
 
 //        val currentCardName = requireArguments().getString("POKE_NAME")
 //        val currentSetId = requireArguments().getString("POKE_SET")
@@ -138,6 +150,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list), PokemonCa
                     Log.d("listUserCardData2", "id of card in collection:${listUserCardData1.size}")
 
                 }
+
                 adapter.notifyDataSetChanged()
 
         })
@@ -185,7 +198,7 @@ class PokemonCardListFragment : Fragment(R.layout.card_fragment_list), PokemonCa
         bundle.putString(POKE_ID, poke.id)
         bundle.putString(POKE_IMG_URL,poke.images.small)
         tradeCardFragment.arguments = bundle
-        transaction.replace(R.id.main_fragment, tradeCardFragment).commit()
+        transaction.replace(R.id.main_fragment, tradeCardFragment).addToBackStack(null).commit()
         Toast.makeText(context,"${poke.name} from the set ${poke.set.name} was traded from your collection",Toast.LENGTH_SHORT).show()
     }
 

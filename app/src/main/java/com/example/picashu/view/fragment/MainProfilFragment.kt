@@ -40,6 +40,19 @@ class MainProfilFragment : Fragment(R.layout.profil_user_fragment) {
     var selectedProfilImgUri : Uri? = null
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("MainProfilFrag","onCreate  : called")
+//        var count = activity?.supportFragmentManager?.backStackEntryCount
+//        if (count != null) {
+//            while (count > 1){
+//                activity?.supportFragmentManager?.popBackStack()
+//                Log.d("MainProfilFrag","onCreate  : backstack poped")
+//                count--
+//            }
+//        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -110,6 +123,25 @@ class MainProfilFragment : Fragment(R.layout.profil_user_fragment) {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        Log.d("MainProfilFrag","onPause  : called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("MainProfilFrag","onResume  : called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("MainProfilFrag","onStop  : called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MainProfilFrag","onDestroy  : called")
+    }
     fun updateUserUi() {
 
         val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
